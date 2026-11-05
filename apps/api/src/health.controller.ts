@@ -9,6 +9,7 @@ export class HealthController {
 
   @Get("ready")
   ready(): { status: "ready" } {
+    // Placeholder only: no external dependencies are currently configured or checked.
     return { status: "ready" };
   }
 }

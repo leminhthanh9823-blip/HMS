@@ -27,6 +27,8 @@ For an individual application, use `pnpm --filter @hms/api dev`, `pnpm --filter 
 
 The API reads `API_HOST` and `API_PORT` from the environment. See [apps/api/.env.example](apps/api/.env.example). No secrets or service credentials are needed.
 
+`GET /health/ready` is currently a placeholder and does not verify database, Redis, or any other dependency. It must not be treated as a production dependency-readiness signal.
+
 ## Checks
 
 ```powershell

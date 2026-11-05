@@ -9,7 +9,7 @@ export default function HomePage() {
         </a>
         <nav aria-label="Main navigation">
           <p className="sidebar-label">QUẢN TRỊ</p>
-          <a className="nav-item active" href="/">
+          <a className="nav-item active" href="/" aria-label="Tổng quan">
             Tổng quan
           </a>
         </nav>

@@ -1,20 +1,57 @@
 import "reflect-metadata";
-import { Catch, HttpException, HttpStatus } from "@nestjs/common";
+import { randomUUID } from "node:crypto";
+import { Catch, HttpException, HttpStatus, Logger } from "@nestjs/common";
 import type { ArgumentsHost, ExceptionFilter } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
+  constructor(
+    private readonly logger: Pick<Logger, "error"> = new Logger(
+      ApiExceptionFilter.name,
+    ),
+  ) {}
+
   catch(exception: unknown, host: ArgumentsHost): void {
     const http = host.switchToHttp();
     const response = http.getResponse<{
       status(code: number): { json(body: unknown): void };
+      setHeader(name: string, value: string): void;
+    }>();
+    const request = http.getRequest<{
+      headers: Record<string, string | string[] | undefined>;
     }>();
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
+    const suppliedRequestId = request.headers["x-request-id"];
+    const requestId =
+      typeof suppliedRequestId === "string" &&
+      /^[A-Za-z0-9._-]{1,128}$/.test(suppliedRequestId)
+        ? suppliedRequestId
+        : randomUUID();
+
+    response.setHeader("X-Request-Id", requestId);
+
+    if (status >= 500) {
+      const exceptionType =
+        exception instanceof HttpException
+          ? "HttpException"
+          : exception instanceof Error
+            ? "Error"
+            : "Unknown";
+      this.logger.error(
+        JSON.stringify({
+          event: "api.internal_error",
+          requestId,
+          statusCode: status,
+          exceptionType,
+        }),
+      );
+    }
+
     const message =
       status >= 500
         ? "Internal server error"
@@ -27,7 +64,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
 }
 
 export async function createApiApp() {
-  const app = await NestFactory.create(AppModule, { logger: false });
+  const app = await NestFactory.create(AppModule, { logger: ["error"] });
   app.enableShutdownHooks();
   app.useGlobalFilters(new ApiExceptionFilter());
   return app;

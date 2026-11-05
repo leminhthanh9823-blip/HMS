@@ -29,9 +29,13 @@ class TestErrorsController {
 @Module({ controllers: [TestErrorsController] })
 class TestErrorsModule {}
 
-async function createTestErrorsApp() {
-  const app = await NestFactory.create(TestErrorsModule, { logger: false });
-  app.useGlobalFilters(new ApiExceptionFilter());
+async function createTestErrorsApp(logEntries: string[]) {
+  const app = await NestFactory.create(TestErrorsModule, { logger: ["error"] });
+  app.useGlobalFilters(
+    new ApiExceptionFilter({
+      error: (entry: string) => logEntries.push(entry),
+    }),
+  );
   return app;
 }
 
@@ -73,11 +77,15 @@ test("unexpected exceptions return a generic response without internal details",
         },
       };
     },
+    setHeader() {},
   };
   new ApiExceptionFilter().catch(
     new Error("database password and stack trace"),
     {
-      switchToHttp: () => ({ getResponse: () => response }),
+      switchToHttp: () => ({
+        getResponse: () => response,
+        getRequest: () => ({ headers: {} }),
+      }),
     } as never,
   );
 
@@ -89,14 +97,17 @@ test("unexpected exceptions return a generic response without internal details",
 });
 
 test("HTTP pipeline hides internal HttpException details for 5xx and preserves 4xx messages", async () => {
-  const app = await createTestErrorsApp();
+  const logEntries: string[] = [];
+  const app = await createTestErrorsApp(logEntries);
   try {
     await app.listen(0, "127.0.0.1");
     const address = app.getHttpServer().address();
     assert.ok(address && typeof address !== "string");
     const baseUrl = `http://127.0.0.1:${address.port}`;
 
-    const internal = await fetch(`${baseUrl}/test-errors/internal`);
+    const internal = await fetch(`${baseUrl}/test-errors/internal`, {
+      headers: { "x-request-id": "request-123" },
+    });
     const internalBody = await internal.json();
     assert.equal(internal.status, 500);
     assert.deepEqual(internalBody, {
@@ -106,6 +117,13 @@ test("HTTP pipeline hides internal HttpException details for 5xx and preserves 4
     const serializedInternalBody = JSON.stringify(internalBody);
     assert.doesNotMatch(serializedInternalBody, /SECRET_INTERNAL_INFORMATION/);
     assert.doesNotMatch(serializedInternalBody, /stack|at\s+\S+\s*\(/i);
+    assert.equal(internal.headers.get("x-request-id"), "request-123");
+    assert.equal(logEntries.length, 1);
+    assert.match(logEntries[0] ?? "", /request-123/);
+    assert.doesNotMatch(
+      logEntries[0] ?? "",
+      /SECRET_INTERNAL_INFORMATION|stack/i,
+    );
 
     const client = await fetch(`${baseUrl}/test-errors/client`);
     assert.equal(client.status, 409);

@@ -10,6 +10,7 @@ test("home page renders HMS content and labeled navigation", () => {
 
   assert.match(markup, /<main/);
   assert.match(markup, /<nav aria-label="Main navigation">/);
+  assert.match(markup, /aria-label="Tổng quan"/);
   assert.match(markup, /Homestay Management System/);
   assert.match(markup, />HMS</);
 });
