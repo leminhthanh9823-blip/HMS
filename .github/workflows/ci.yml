@@ -13,6 +13,37 @@ on:
   pull_request:
 
 jobs:
+  database-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres@sha256:edb0c08dc33befd0262ab3b5cf1c4f3f8cfd8b09e88c05b45adee29d6761ddb6
+        env:
+          POSTGRES_USER: hms_test
+          POSTGRES_PASSWORD: hms_test_only
+          POSTGRES_DB: hms_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U hms_test -d hms_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://hms_test:hms_test_only@127.0.0.1:5432/hms_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @hms/api test:db
+
   verify:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
