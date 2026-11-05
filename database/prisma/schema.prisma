@@ -6,3 +6,23 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum PropertyStatus {
+  Draft
+  Active
+  Suspended
+  Closed
+}
+
+model Property {
+  id           String         @id @db.Uuid
+  code         String         @unique @db.VarChar(32)
+  name         String         @db.VarChar(160)
+  timezone     String         @db.VarChar(128)
+  status       PropertyStatus @default(Draft)
+  businessDate DateTime       @map("business_date") @db.Date
+  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime       @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@map("properties")
+}

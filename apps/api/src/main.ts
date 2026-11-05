@@ -9,6 +9,7 @@ import { AppModule } from "./app.module";
 export type ApiSecurityOptions = {
   corsOrigins?: string[];
   rateLimit?: { limit: number; ttl: number };
+  databaseUrl?: string | null;
 };
 
 const DEFAULT_RATE_LIMIT = { limit: 60, ttl: 60_000 };
@@ -122,8 +123,15 @@ export class ApiExceptionFilter implements ExceptionFilter {
 export async function createApiApp(
   options: ApiSecurityOptions = securityOptionsFromEnv(),
 ) {
+  const databaseEnabled =
+    options.databaseUrl === undefined
+      ? Boolean(process.env.DATABASE_URL)
+      : options.databaseUrl !== null;
   const app = await NestFactory.create(
-    AppModule.register(options.rateLimit ?? DEFAULT_RATE_LIMIT),
+    AppModule.register(
+      options.rateLimit ?? DEFAULT_RATE_LIMIT,
+      databaseEnabled,
+    ),
     { logger: ["error"] },
   );
   app.getHttpAdapter().getInstance().disable("x-powered-by");
