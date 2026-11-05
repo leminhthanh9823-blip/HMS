@@ -5,6 +5,8 @@ import { DatabaseModule } from "./database/database.module";
 import { HealthController } from "./health.controller";
 import { PropertyController } from "./properties/property.controller";
 import { PropertyService } from "./properties/property.service";
+import { RoomController } from "./rooms/room.controller";
+import { RoomService } from "./rooms/room.service";
 
 @Module({
   controllers: [HealthController],
@@ -20,10 +22,11 @@ export class AppModule {
         ThrottlerModule.forRoot({ throttlers: [rateLimit] }),
         ...(databaseEnabled ? [DatabaseModule] : []),
       ],
-      controllers: databaseEnabled ? [PropertyController] : [],
+      controllers: databaseEnabled ? [PropertyController, RoomController] : [],
       providers: [
         { provide: APP_GUARD, useClass: ThrottlerGuard },
         ...(databaseEnabled ? [PropertyService] : []),
+        ...(databaseEnabled ? [RoomService] : []),
       ],
     };
   }

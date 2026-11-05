@@ -103,3 +103,116 @@ test("PROP creates, reads and changes a synthetic property without deriving busi
     await app.close();
   }
 });
+
+test("ROOM scopes types and rooms to a property and enforces same-property FK and daily capacity CHECK", async () => {
+  assert.ok(
+    process.env.DATABASE_URL,
+    "DATABASE_URL must point to the ephemeral PostgreSQL test service",
+  );
+  const app = await createApiApp({
+    databaseUrl: process.env.DATABASE_URL,
+    corsOrigins: [],
+  });
+  await app.listen(0, "127.0.0.1");
+  const database = app.get(DatabaseService);
+  const propertyIds: string[] = [];
+  const address = app.getHttpServer().address() as { port: number };
+  const baseUrl = `http://127.0.0.1:${address.port}`;
+
+  try {
+    for (const code of [
+      `ROOM-A-${randomUUID().slice(0, 6)}`,
+      `ROOM-B-${randomUUID().slice(0, 6)}`,
+    ]) {
+      const response = await fetch(`${baseUrl}/properties`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          code,
+          name: "Synthetic Room Test Property",
+          timezone: "Asia/Ho_Chi_Minh",
+          businessDate: "2026-11-05",
+        }),
+      });
+      assert.equal(response.status, 201);
+      propertyIds.push(((await response.json()) as { id: string }).id);
+    }
+    const [propertyA, propertyB] = propertyIds as [string, string];
+
+    const typeResponse = await fetch(
+      `${baseUrl}/properties/${propertyA}/room-types`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          code: "SYN-ROOM",
+          name: "Synthetic Room Type",
+          saleUnitKind: "room",
+        }),
+      },
+    );
+    assert.equal(typeResponse.status, 201);
+    const roomType = (await typeResponse.json()) as {
+      id: string;
+      propertyId: string;
+    };
+    assert.equal(roomType.propertyId, propertyA);
+
+    const roomResponse = await fetch(
+      `${baseUrl}/properties/${propertyA}/rooms`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          roomTypeId: roomType.id,
+          code: "SYN-101",
+          name: "Synthetic Room 101",
+        }),
+      },
+    );
+    assert.equal(roomResponse.status, 201);
+
+    const crossProperty = await fetch(
+      `${baseUrl}/properties/${propertyB}/rooms`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          roomTypeId: roomType.id,
+          code: "SYN-201",
+          name: "Synthetic Cross Property",
+        }),
+      },
+    );
+    assert.equal(crossProperty.status, 404);
+
+    const capacityResponse = await fetch(
+      `${baseUrl}/properties/${propertyA}/room-types/${roomType.id}/capacity`,
+      {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ stayDate: "2026-11-06", capacity: 1 }),
+      },
+    );
+    assert.equal(capacityResponse.status, 200);
+    assert.equal(
+      ((await capacityResponse.json()) as { capacity: number; sold: number })
+        .sold,
+      0,
+    );
+
+    await assert.rejects(database.$executeRaw`
+      INSERT INTO rooms (id, property_id, room_type_id, code, name)
+      VALUES (${randomUUID()}::uuid, ${propertyB}::uuid, ${roomType.id}::uuid, 'DB-CROSS', 'Synthetic DB Cross Property')
+    `);
+    await assert.rejects(database.$executeRaw`
+      INSERT INTO room_type_capacities (property_id, room_type_id, stay_date, capacity, sold)
+      VALUES (${propertyA}::uuid, ${roomType.id}::uuid, '2026-11-07'::date, 1, 2)
+    `);
+  } finally {
+    for (const propertyId of propertyIds) {
+      await database.$executeRaw`DELETE FROM properties WHERE id = ${propertyId}::uuid`;
+    }
+    await app.close();
+  }
+});

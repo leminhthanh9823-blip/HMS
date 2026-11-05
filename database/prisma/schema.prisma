@@ -23,6 +23,49 @@ model Property {
   businessDate DateTime       @map("business_date") @db.Date
   createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt    DateTime       @default(now()) @map("updated_at") @db.Timestamptz(6)
+  roomTypes    RoomType[]
+  rooms        Room[]
 
   @@map("properties")
+}
+
+model RoomType {
+  id           String             @db.Uuid
+  propertyId   String             @map("property_id") @db.Uuid
+  code         String             @db.VarChar(32)
+  name         String             @db.VarChar(120)
+  saleUnitKind String             @map("sale_unit_kind") @db.VarChar(32)
+  property     Property           @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  rooms        Room[]
+  capacities   RoomTypeCapacity[]
+
+  @@id([id, propertyId])
+  @@unique([propertyId, code])
+  @@map("room_types")
+}
+
+model Room {
+  id         String   @db.Uuid
+  propertyId String   @map("property_id") @db.Uuid
+  roomTypeId String   @map("room_type_id") @db.Uuid
+  code       String   @db.VarChar(32)
+  name       String   @db.VarChar(120)
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  roomType   RoomType @relation(fields: [roomTypeId, propertyId], references: [id, propertyId], onDelete: Cascade)
+
+  @@id([id, propertyId])
+  @@unique([propertyId, code])
+  @@map("rooms")
+}
+
+model RoomTypeCapacity {
+  propertyId String   @map("property_id") @db.Uuid
+  roomTypeId String   @map("room_type_id") @db.Uuid
+  stayDate   DateTime @map("stay_date") @db.Date
+  capacity   Int
+  sold       Int      @default(0)
+  roomType   RoomType @relation(fields: [roomTypeId, propertyId], references: [id, propertyId], onDelete: Cascade)
+
+  @@id([roomTypeId, stayDate])
+  @@map("room_type_capacities")
 }
