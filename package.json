@@ -17,6 +17,9 @@
     "format:check": "prettier --check \"apps/**/*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \"packages/**/*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \"*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \".github/workflows/*.{yaml,yml}\""
   },
   "pnpm": {
+    "overrides": {
+      "multer": "2.5.0"
+    },
     "onlyBuiltDependencies": [
       "esbuild"
     ]

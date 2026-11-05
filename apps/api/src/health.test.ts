@@ -125,6 +125,25 @@ test("HTTP pipeline hides internal HttpException details for 5xx and preserves 4
       /SECRET_INTERNAL_INFORMATION|stack/i,
     );
 
+    const tooLongRequestId = await fetch(`${baseUrl}/test-errors/internal`, {
+      headers: { "x-request-id": "a".repeat(129) },
+    });
+    assert.equal(tooLongRequestId.status, 500);
+    assert.match(
+      tooLongRequestId.headers.get("x-request-id") ?? "",
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
+
+    const invalidCharacterRequestId = await fetch(
+      `${baseUrl}/test-errors/internal`,
+      { headers: { "x-request-id": "invalid$request-id" } },
+    );
+    assert.equal(invalidCharacterRequestId.status, 500);
+    assert.match(
+      invalidCharacterRequestId.headers.get("x-request-id") ?? "",
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
+
     const client = await fetch(`${baseUrl}/test-errors/client`);
     assert.equal(client.status, 409);
     assert.deepEqual(await client.json(), {

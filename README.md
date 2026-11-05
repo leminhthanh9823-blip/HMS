@@ -29,6 +29,12 @@ The API reads `API_HOST` and `API_PORT` from the environment. See [apps/api/.env
 
 `GET /health/ready` is currently a placeholder and does not verify database, Redis, or any other dependency. It must not be treated as a production dependency-readiness signal.
 
+The CI production dependency audit is fail-soft while the Owner has not set an advisory severity threshold or exception policy. A successful CI run therefore does not mean the audit reported zero advisories.
+
+For TypeScript project references, running `tsc -b` from the repository root uses each app's regular `tsconfig.json` and can emit test files into `dist`. The official build is `pnpm build`, which uses each app's `tsconfig.build.json` and excludes tests.
+
+The API test and development runner uses `tsx`/esbuild, which does not emit decorator metadata for Nest constructor injection. Nest dependencies must use explicit `@Inject()` decorators; `apps/api/src/di.test.ts` exercises this behavior.
+
 ## Checks
 
 ```powershell
