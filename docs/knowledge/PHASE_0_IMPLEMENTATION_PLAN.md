@@ -109,6 +109,15 @@ Use pnpm workspaces first; do not add Nx/Turborepo until CI performance or team 
 
 ## 4. Package plan (all versions pending approval)
 
+**Prototype Gate A/B actual (verified 2026-11-05):** Node.js `24.11.1`, NestJS `11.1.16`, TypeScript `5.9.3` and pnpm `10.34.9`. The candidate versions in the table below are proposals, not the versions used by the bounded prototype and not product approvals.
+
+| Component | Candidate in this plan | Prototype Gate A/B actual |
+|---|---|---|
+| Node.js | `24.22.2` | `24.11.1` |
+| NestJS | `12.3.x` | `11.1.16` |
+| TypeScript | `6.x` | `5.9.3` |
+| pnpm | `12.x` | `10.34.9` |
+
 | Workspace | Expected package(s) | Purpose / conditions |
 |---|---|---|
 | Root | pnpm 12 and TypeScript 6 candidate lines per the technology proposal | Exact releases, workspace behavior and peer compatibility remain Unverified until selected and resolved. |
@@ -127,6 +136,8 @@ These are candidate dependencies, not a package manifest. Avoid adding state-man
 ## 5. Implementation order
 
 Steps 0–1 and the shell-only portions of Step 3 describe the base Phase 0 foundation; CI and generic health/readiness checks are part of those deliverables. Step 2 requires separate approval for local service choices. Steps 4–7 are conditional follow-on work packages and are not authorized by completing the base Phase 0 foundation.
+
+The actual prototype toolchain is listed in §4. The steps below use candidate versions and remain conditional on separate Owner/Dev Lead approval; they do not describe an already approved upgrade.
 
 ### Step 0 — Confirm project gates
 
@@ -232,6 +243,8 @@ This order is a dependency outline, not approval of the temporary ASM policies. 
 
 The commands below are a future verification checklist. They were **not run** as part of preparing this plan. Adjust package filters and paths when the workspace is actually created.
 
+The current Gate A/B prototype versions are listed in §4. These future commands do not imply that candidate Node, NestJS, TypeScript or pnpm versions have been installed or approved.
+
 ```powershell
 # Validate workspace / Compose syntax
 pnpm install --frozen-lockfile
@@ -263,6 +276,8 @@ postman collection run ./postman/collections/hms-api
 Never run `prisma migrate deploy` against a shared/production database from an unreviewed local shell. Production migrations require an approved release job, backup/restore readiness, and migration owner.
 
 ## 11. Decisions still awaiting direct Owner approval
+
+The version candidates in this section and elsewhere in the plan are distinct from the actual Gate A/B prototype versions recorded in §4. Neither the prototype nor this plan constitutes Owner approval of the product toolchain.
 
 1. Approve technical choices individually or as a bounded bundle: NestJS + TypeScript, Next.js + React + TypeScript, PostgreSQL, Redis + BullMQ, Prisma, Modular Monolith, pnpm monorepo, REST/OpenAPI, Docker Compose and API/worker topology. None is confirmed merely by discussion.
 2. Approve exact compatible versions after reviewing the Unverified items and compatibility matrix; candidate set is not a lockfile or approved baseline.

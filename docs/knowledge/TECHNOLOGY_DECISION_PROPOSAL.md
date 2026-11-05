@@ -102,6 +102,17 @@ Allowed dependency direction: API/controller → application use case → owning
 
 ## 4. Technology baseline candidates
 
+> **Prototype Gate A/B actual (verified 2026-11-05):** Node.js `24.11.1`, NestJS `11.1.16`, TypeScript `5.9.3`, pnpm `10.34.9`. These are the bounded prototype runtime/tool versions, not approved HMS product selections. The candidates below remain Proposed / Pending Approval.
+
+| Component | Proposed candidate in this document | Prototype Gate A/B actual |
+|---|---|---|
+| Node.js | `24.22.2` | `24.11.1` |
+| NestJS | `12.3.0` | `11.1.16` |
+| TypeScript | `6.0.x` | `5.9.3` |
+| pnpm | `12.x` | `10.34.9` |
+
+The word **Unverified** below means evidence has not established compatibility or a fact at the exact candidate/version level. Such entries must not be treated as validated comparison advantages or decision evidence; they are retained as unresolved validation work.
+
 Every row below is a candidate and remains Proposed / Pending Approval. Official docs show a coherent candidate set in some areas, but this is not a package-manager peer-resolution check, build, or security audit. Node 26.13.0 entered LTS on Oct 28, but Prisma ORM 7's explicit supported runtime list does not include Node 26; Node 24.22.2 aligns with both NestJS 12 tooling and Prisma 7's documented ranges. NestJS 12's CLI tooling requires TypeScript 6 and a newer Node floor than its application runtime. ([Node.js releases](https://nodejs.org/en/about/previous-releases), [Node 26.13.0 LTS release](https://nodejs.org/en/blog/release/v26.13.0), [NestJS 12 migration guide](https://docs.nestjs.com/migration-guide), [Prisma 7 requirements](https://www.prisma.io/docs/orm/v7/reference/system-requirements))
 
 | Layer | Version candidate | Recommendation and rationale | Risks / approval state |
@@ -172,6 +183,8 @@ This is a documentation-based compatibility review, not an installed dependency 
 **Recommendation: Prisma ORM 7**, with checked-in SQL migrations for database invariants and limited reviewed raw SQL for concurrency-critical operations. This chooses team maintainability for routine work without surrendering PostgreSQL controls. Before approval, the Dev Lead should demonstrate a `RoomNight` partial unique index, atomic room-type capacity update, `SELECT … FOR UPDATE`, audit append in one transaction and recoverable migration path. Do not use ORM schema sync in production. Prisma ORM 8 is still release candidate in the official docs at the review date; OQ-036 and this ORM choice are both unapproved.
 
 ## 5. API, authentication, authorization and security
+
+The API and security recommendations in this section remain proposals. The actual Gate A/B prototype versions are listed in §4 and do not imply approval of these product choices.
 
 ### Next.js ↔ NestJS and API choice
 
@@ -336,6 +349,8 @@ Treat this as a proposed layout, not created files. Keep DB schema and migration
 
 ## 10. Docker and deployment architecture
 
+The PostgreSQL/Redis versions and deployment shapes below are proposals, not services present in the Gate A/B prototype. Its actual tool versions are listed in §4; no production provider or region is selected here.
+
 ### Development
 
 - Docker Compose may start PostgreSQL 18 and a selected supported Redis line (7.4 or 8.2 are lifecycle candidates) with local API/web/worker processes; an optional S3-compatible local emulator can support file flows. All remain proposals and must follow OQ-036/runtime decisions. Persist only disposable developer data; provide safe seed/reset workflows after implementation is authorized.
@@ -351,6 +366,8 @@ Treat this as a proposed layout, not created files. Keep DB schema and migration
 - Kubernetes is not recommended for the initial baseline: it adds cluster lifecycle, policy and on-call burden without a stated load or team need. Revisit only with measured scale, tenancy or platform constraints. Cloud/provider, region, residency and operating model remain unselected.
 
 ## 11. Business rule preservation checks
+
+These checks describe proposed safeguards. They do not change BA requirements or select the tool versions used by the Gate A/B prototype; see §4 for the actual-versus-candidate distinction.
 
 | Domain | Architectural safeguard | BA baseline to preserve / unresolved item |
 |---|---|---|

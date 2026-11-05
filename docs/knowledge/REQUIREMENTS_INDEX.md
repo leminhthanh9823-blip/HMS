@@ -27,7 +27,7 @@ Ranges below are inclusive and contain every sequential ID unless explicitly not
 
 Part 2 reports 59 FR, Part 3 reports 75 FR, and Part 4 reports 72 defined FR, totaling 206. (BA Part 2, §10, p.40; Part 3, §11, p.39; Part 4, §11, pp.35–36.) AST, NTF, RPT and CHN have scope descriptions but no detailed FR yet; they are planned for a later BA part. (BA Part 4, §11.6, p.37.) Part 4 also contains two orphan references, `FR-INV-015` and `FR-INV-018`, with no corresponding definitions; they are not included in the 206 total and require BA correction. (BA Part 4, §0.2, pp.2–3.)
 
-+## Searchable ID manifest
+## Searchable ID manifest
 
 Ranges in the summary table are compact for reading; this manifest makes every defined ID directly searchable.
 

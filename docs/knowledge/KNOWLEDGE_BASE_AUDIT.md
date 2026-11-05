@@ -1,3 +1,5 @@
+> Ngôn ngữ: Tiếng Việt. Hiện chưa có bản tiếng Anh tương ứng trong `docs/knowledge/`.
+
 # Báo cáo audit Knowledge Base HMS
 
 Ngày audit: 04/11/2026. Phạm vi: `AGENTS.md`, toàn bộ Markdown trong `docs/knowledge/`, và 7 PDF trong `docs/source/`. Audit chỉ sửa Knowledge Base; không thay đổi PDF, không tạo code ứng dụng, database hay migration.

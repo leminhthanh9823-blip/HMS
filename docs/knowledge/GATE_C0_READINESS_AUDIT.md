@@ -41,6 +41,7 @@ Broadly consistent: source labels `[C]/[A]/[Q]` are preserved; BA module list is
 
 Items to clarify before implementation, without changing their status:
 
+- OQ-036 is recorded in the Knowledge Base as a technology-selection question sourced from the technology proposal (pp.1–3); it is not an OQ originating in the BA catalog. Its blocking effect is limited to choosing the HMS database engine and dependent schema/migrations.
 - Some proposal text recommends PostgreSQL/Prisma while the decision register correctly marks both pending. Do not treat “recommended” as approval.
 - OQ-034 BA has a chain-wide temporary assumption; the current decision register explicitly treats it as unresolved. Do not implement that assumption.
 - OQ-041 source contains a “yes” assumption for one account/active property selection; the decision register correctly leaves cardinality and switching policy open.
@@ -172,19 +173,19 @@ Do not depend on universal down migrations. Use rollback only when operation is 
 
 ## 14. Gate C readiness assessment
 
-| Condition | Status | Evidence | Owner decision |
-|---|---|---|---|
-| Database technology | Needs Decision | OQ-036 open; PostgreSQL only proposed | Select engine/provider/version/region |
-| ORM | Needs Decision | No ORM approved or installed | Select after DB/team review |
-| Multi-property data model | Ready (preparation only) | Conceptual constraints documented; room count unknown | Approve scope and later detailed model |
-| Property isolation | Needs Decision | Principles proposed; no auth design approved | Confirm threat/control expectations |
-| OQ-041 authorization | Blocked for final association/schema | Role cardinality/context unresolved | Answer nine policy points |
-| OQ-034 guest sharing | Blocked for guest schema/behavior | Global/local/hybrid and blacklist open | Decide with OQ-019 legal input |
-| Migration strategy | Needs Decision | Proposal in §12, no approved operator/release policy | Approve controlled production lifecycle |
-| Environment configuration | Can Defer | `.env.example` safe; production environment/provider unknown | Decide secrets/runtime configuration before deploy |
-| Backup/restore | Needs Decision | No provider, RPO/RTO or owner identified | Assign operator and recovery objectives |
-| Database testing strategy | Ready (preparation only) | PostgreSQL-specific plan in §13 | Approve CI resource/test policy at implementation |
-| Initial Git baseline | Needs Decision | No tracked files; inventory §15 | Owner review and explicit include/exclude confirmation |
+| Condition | Status | Evidence | Source / classification | Owner decision |
+|---|---|---|---|---|
+| Database technology | Needs Decision | OQ-036 open; PostgreSQL only proposed | Knowledge Base technology-selection question sourced from technology proposal, pp.1–3; not a BA-origin OQ | Select engine/provider/version/region |
+| ORM | Needs Decision | No ORM approved or installed | Gate C technical proposal; no BA OQ selects an ORM | Select after DB/team review |
+| Multi-property data model | Ready (preparation only) | Conceptual constraints documented; room count unknown | Conceptual proposal in this audit, §11; owner-confirmed business direction is single-owner/multi-property | Approve scope and later detailed model |
+| Property isolation | Needs Decision | Principles proposed; no auth design approved | Architecture proposal, §11; authorization policy remains under OQ-041 | Confirm threat/control expectations |
+| OQ-041 authorization | Blocked for final association/schema | Role cardinality/context unresolved | BA Part 2, p.41; OQ status preserved in `OPEN_QUESTIONS.md` | Answer nine policy points |
+| OQ-034 guest sharing | Blocked for guest schema/behavior | Global/local/hybrid and blacklist open | BA Part 1, p.35; OQ status preserved in `OPEN_QUESTIONS.md` | Decide with OQ-019 legal input |
+| Migration strategy | Needs Decision | Proposal in §12, no approved operator/release policy | Technical proposal in this audit, §12; no BA OQ selects a migration tool | Approve controlled production lifecycle |
+| Environment configuration | Can Defer | `.env.example` safe; production environment/provider unknown | Repository configuration reviewed in §15; production provider remains unselected | Decide secrets/runtime configuration before deploy |
+| Backup/restore | Needs Decision | No provider, RPO/RTO or owner identified | BA Part 1, NFR-AVL-001 `[A]`, p.9; operational owner unresolved | Assign operator and recovery objectives |
+| Database testing strategy | Ready (preparation only) | PostgreSQL-specific plan in §13 | Technical testing proposal in this audit, §13 | Approve CI resource/test policy at implementation |
+| Initial Git baseline | Needs Decision | No tracked files; inventory §15 | Repository inventory in this audit, §15 | Owner review and explicit include/exclude confirmation |
 
 **Architecture Preparation:** may continue (concepts, diagrams, decision package). **Implementation Authorization:** absent. Do not create database/schema/migrations until Owner confirms database technology and scope; Dev Lead validates engine/provider fit; the relevant access/guest/legal policies are resolved for included entities; and a bounded implementation work package is explicitly authorized. OQ-041 and OQ-034 block their dependent schemas/behaviors even if unrelated neutral infrastructure is later authorized.
 
@@ -226,7 +227,7 @@ Hashes are SHA-256 over exact local file bytes; sizes in bytes.
 | `HMS_Tai-lieu-BA_Phan-4_v0.1.pdf` | 1,398,953 | `58CF0F3BB4D809163EA52C34110411E629227B497028F3FF886EB70C62CF5D20` |
 | `hms-de-xuat-cong-nghe.pdf` | 49,334 | `F60F682461D67DC53507B64F01390F22F425444A198880F4F84240DB02E6BAF8` |
 | `hms-de-xuat-giao-dien-v2.pdf` | 54,094 | `F77BFB679735E0FC18F1CC6968EE0C734E6E8EFAEFB2415FCA6A19E9CF6C8CB5` |
-| `hms-de-xuat-trien-khai.pdf` | 55,178 | `F3ECC9353BFB0BCDCB0656FF97E04B4D4716D17434D944DC6D0CB75346BA261` |
+| `hms-de-xuat-trien-khai.pdf` | 55,178 | `F3ECC9353BFB0BCDC6B0656FF97E04B4D4716D17434D944DC6D0CB75346BA261` |
 
 ## 17. Risks and unresolved questions
 
