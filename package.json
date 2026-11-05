@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "pnpm@10.34.9",
   "engines": {
-    "node": ">=24.11.1"
+    "node": ">=24.11.1 <25"
   },
   "scripts": {
     "lint": "eslint \"apps/**/*.{js,mjs,cjs,ts,tsx}\" \"packages/**/*.{js,mjs,cjs,ts,tsx}\" \"*.{js,mjs,cjs,ts,tsx}\"",

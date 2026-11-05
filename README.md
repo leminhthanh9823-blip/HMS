@@ -6,8 +6,10 @@ The Owner authorized this bounded Gate A/B implementation. Package and framework
 
 ## Requirements
 
-- Node.js `24.11.1` or compatible newer 24.x runtime
+- Node.js `24.11.1` or a compatible newer 24.x runtime (`.nvmrc`, CI and `engines` range)
 - pnpm `10.34.9`
+
+The Node version is pinned to `24.11.1` for local use and CI. The root `engines.node` range allows later Node 24 patches while excluding unvalidated major lines. Recheck `.nvmrc`, CI and `package.json` together when changing the runtime baseline.
 
 ## Install
 
