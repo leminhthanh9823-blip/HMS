@@ -3,7 +3,63 @@ import { randomUUID } from "node:crypto";
 import { Catch, HttpException, HttpStatus, Logger } from "@nestjs/common";
 import type { ArgumentsHost, ExceptionFilter } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import helmet from "helmet";
 import { AppModule } from "./app.module";
+
+export type ApiSecurityOptions = {
+  corsOrigins?: string[];
+  rateLimit?: { limit: number; ttl: number };
+};
+
+const DEFAULT_RATE_LIMIT = { limit: 60, ttl: 60_000 };
+
+export function parseCorsOrigins(value: string | undefined): string[] {
+  if (!value?.trim()) return [];
+
+  const origins = value.split(",").map((origin) => origin.trim());
+  if (origins.some((origin) => !origin || origin === "*")) {
+    throw new Error("API_CORS_ORIGINS must contain explicit origins only");
+  }
+
+  for (const origin of origins) {
+    let parsed: URL;
+    try {
+      parsed = new URL(origin);
+    } catch {
+      throw new Error("API_CORS_ORIGINS must contain valid origins only");
+    }
+    if (
+      !["http:", "https:"].includes(parsed.protocol) ||
+      parsed.origin !== origin
+    ) {
+      throw new Error("API_CORS_ORIGINS must contain valid origins only");
+    }
+  }
+  return [...new Set(origins)];
+}
+
+function positiveInteger(value: string | undefined, fallback: number): number {
+  if (value === undefined) return fallback;
+  if (!/^\d+$/.test(value))
+    throw new Error("Rate-limit settings must be positive integers");
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 1) {
+    throw new Error("Rate-limit settings must be positive integers");
+  }
+  return parsed;
+}
+
+export function securityOptionsFromEnv(
+  env: NodeJS.ProcessEnv = process.env,
+): ApiSecurityOptions {
+  return {
+    corsOrigins: parseCorsOrigins(env.API_CORS_ORIGINS),
+    rateLimit: {
+      limit: positiveInteger(env.API_RATE_LIMIT_MAX, DEFAULT_RATE_LIMIT.limit),
+      ttl: positiveInteger(env.API_RATE_LIMIT_TTL_MS, DEFAULT_RATE_LIMIT.ttl),
+    },
+  };
+}
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
@@ -63,9 +119,16 @@ export class ApiExceptionFilter implements ExceptionFilter {
   }
 }
 
-export async function createApiApp() {
-  const app = await NestFactory.create(AppModule, { logger: ["error"] });
+export async function createApiApp(
+  options: ApiSecurityOptions = securityOptionsFromEnv(),
+) {
+  const app = await NestFactory.create(
+    AppModule.register(options.rateLimit ?? DEFAULT_RATE_LIMIT),
+    { logger: ["error"] },
+  );
   app.getHttpAdapter().getInstance().disable("x-powered-by");
+  app.use(helmet());
+  app.enableCors({ origin: options.corsOrigins ?? [], credentials: false });
   app.enableShutdownHooks();
   app.useGlobalFilters(new ApiExceptionFilter());
   return app;
@@ -93,7 +156,7 @@ async function bootstrap(): Promise<void> {
   const port = parseApiPort(process.env.API_PORT);
   const host = process.env.API_HOST ?? "127.0.0.1";
 
-  const app = await createApiApp();
+  const app = await createApiApp(securityOptionsFromEnv());
 
   await app.listen(port, host);
   console.info(`HMS API listening on http://${host}:${port}`);
