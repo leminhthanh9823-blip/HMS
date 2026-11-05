@@ -18,7 +18,7 @@
 | SQL Server | Appropriate if existing Owner/operations expertise, licensing, reporting or Microsoft hosting materially favors it. | No such organizational constraint is recorded; licensing/provider and cross-platform development implications need validation. It should not be selected merely because the application uses TypeScript. |
 | Defer engine selection | Avoids committing before Owner confirms scope, budget, provider and operating ownership. | Blocks production schema, ORM-specific migrations and any durable HMS business entity; only non-database preparation can proceed. |
 
-**Recommendation — Proposed – chờ Owner:** PostgreSQL, conditional on a small compatibility spike and an operating-cost/provider review. The repository’s technology proposal already treats PostgreSQL as its candidate; this is supporting context, not approval. Validate constraints/indexes, isolation/concurrency behavior and backup/restore with representative synthetic flows. Select major version separately after checking support lifecycle and provider offerings. Provider, region, data residency, RLS policy and recovery targets remain separate decisions.
+**Owner decision — Approved for the test project:** PostgreSQL is the primary database engine. Provider, production version, region, backup, data residency, RLS policy and recovery targets remain separate and unapproved under D12.
 
 **Reversibility:** High cost to reverse after schema and production data; low before schema. **Unlocks:** engine-specific schema, migration and database integration-test work. **Risk if wrong:** migration/hosting cost, weakened integrity controls, or unsupported operating model. **Early spike:** implement a disposable synthetic transaction showing unique/foreign-key enforcement, competing writes and a reporting query on candidate engines; measure no production capacity from property counts. **Confirm:** Owner selects engine; Dev Lead validates technical/provider fit; Operations and legal counsel advise operating/residency constraints.
 
@@ -46,7 +46,7 @@
 | Kysely or another query builder | Keeps SQL visible while providing typed query construction; limits ORM model coupling and can suit reporting-heavy work. | Does not supply the same entity lifecycle/relationship abstraction; migrations, runtime validation and application conventions must be assembled and owned. |
 | Defer / direct reviewed SQL | Avoids premature ORM coupling while D1 and domain data shape are unresolved. | Repeated hand-written mapping and no standard migration workflow slow the first persistent slice; still requires a chosen driver and review process. |
 
-**Recommendation — Proposed – chờ Owner:** Prisma 7 as the default candidate because it is already the technology proposal’s primary option and offers a clear generated-client/migration workflow. Require explicit escape hatches for reviewed SQL, constraints and reports; keep business logic out of ORM hooks. This choice is not coupled to approving PostgreSQL: D1 and D2 need independent answers. Current registry queries (2026-11-05) returned Prisma CLI/client/PG adapter `7.10.1` and `pg@8.23.1`; Prisma 8 showed an RC as the unqualified latest, so the plan uses the latest observed stable 7.x candidate, not the RC. Compatibility with this repository’s exact Nest/ESM setup remains a spike, not established by `pnpm view` alone.
+**Owner decision — Approved:** Prisma 7 stable, not Prisma 8 RC. SQL migrations require review; raw SQL is permitted for constraints and locking. The implementation verified and pins Prisma CLI/client/PG adapter `7.10.1` and `pg@8.23.1` from the registry. Production provider/version details remain under D12.
 
 **Reversibility:** Medium before schema growth, high after migrations and repository conventions spread. **Unlocks:** standard repositories, migration review and database tests. **Risk if wrong:** pervasive generated-model coupling or slow/opaque reporting. **Early spike:** one synthetic table, one multi-step transaction with rollback, one concurrent update, one composite integrity rule, one report using raw SQL, one migration review and a test seam without mocking away PostgreSQL. **Confirm:** Dev Lead recommends; Owner approves the project technology bundle if required by governance.
 
@@ -73,7 +73,7 @@
 | Stage it: approve versions first, spike ESM + chosen ORM on an isolated test branch, then migrate apps together | Isolates incompatibilities before changing the app shells; makes rollback and measured comparison easier. | Temporary spike upkeep; may require two implementation passes and explicit branch/review time. |
 | Defer | No version/module churn before D1/D2 decisions. | Blocks production implementation if the approved ORM/framework needs another runtime model. |
 
-**Recommendation — Proposed – chờ Owner:** do not change module mode or framework during technical foundation authorization. First approve D1/D2 and the exact toolchain independently, then run a small ESM/ORM spike; prefer a single consistent module format across API and worker if that spike passes. The technology proposal’s Nest 12/TS 6/ESM values are candidates, not current installed state or approval. Current repo uses CommonJS/Node resolution, TypeScript 5.9.3, Nest 11.1.29 and Node 24.11.1; the Nest patch is still awaiting written Owner confirmation in the checklist.
+**Owner decision — ESM spike only:** D1/D2 are approved for the test project. The ESM measurement is recorded in [SPIKE_ESM.md](SPIKE_ESM.md); the official module system, framework and toolchain remain unchanged by D3.
 
 **Reversibility:** Medium before domain code, high after app/runtime packages and tools depend on the module format. **Unlocks:** reliable module/build scripts and ORM integration. **Risk if wrong:** loader/DI/test/build failures, production startup mismatch, duplicate dependency formats. **Early spike:** compile/start API + worker with one explicitly injected service, generate/connect ORM client, run Windows/Linux tests and shutdown. **Confirm:** Owner for toolchain/version authorization; Dev Lead for migration plan and compatibility.
 
@@ -91,7 +91,7 @@
 | Another standards-based schema validator | Could align with framework-native schema interfaces or existing team expertise. | Exact adapter, error shape, ecosystem and version support are not selected; risk of duplicate schema systems. |
 | Defer | No dependency or API contract chosen before business scope. | Must block business endpoints; hand-written ad hoc validation leads to inconsistent boundaries. |
 
-**Recommendation — Proposed – chờ Owner:** Zod schema-first validation in an explicit Nest pipe, with one stable error envelope and no automatic exposure of rejected values. Avoid coupling Web and API packages until ownership and version boundaries are agreed. Registry observation 2026-11-05: `zod@4.6.7`; no Nest adapter package is required by this proposal because the pipe calls the schema’s parse/safe-parse API directly. Verify behavior and supported TypeScript/Nest versions in a spike.
+**Owner decision — Approved:** Zod schemas with explicit Nest pipes. The implementation pins registry-verified `zod@4.6.7`; validation failures return a safe 400 without exposing rejected values or validation internals.
 
 **Reversibility:** Low before endpoint schemas, medium after public contracts spread. **Unlocks:** safe business DTOs and contract-level validation tests. **Risk if wrong:** inconsistent coercion, unsafe error disclosure, duplicated schemas or breaking input changes. **Early spike:** representative string/number/date/object, unknown-key policy, malformed body, query and path parameter; assert HTTP error shape and no sensitive input in logs. **Confirm:** Owner approves validation policy; Dev Lead approves implementation and package versions.
 
@@ -118,7 +118,7 @@
 | Add a full edge/WAF/security service as primary control | Central policy and possible managed protections. | Provider, cost, ownership and proxy trust are unselected; does not replace application-level authorization or safe headers. |
 | Defer all controls | No policy assumed before Owner input. | Business endpoints must remain unexposed; unsafe defaults can become entrenched. |
 
-**Recommendation — Proposed – chờ Owner:** sequence before business endpoints: (1) Owner identifies allowed origins, credential/cookie expectations and deployment proxy; (2) enable narrow CORS; (3) adopt Helmet or reviewed explicit equivalent with exceptions documented; (4) set global rate limit plus stricter sensitive-operation classes only after threat/traffic review; (5) test behind the actual trusted proxy. Never treat CORS as authorization. Current Web has basic security headers; API production hardening beyond current errors/request ID is not implied.
+**Owner decision — Approved baseline:** narrow configurable CORS allowlist (empty by default), Helmet security headers and configurable request rate limiting are enabled and tested. CORS credentials remain disabled; proxy trust is not enabled. Production origins/proxy operation remain unverified.
 
 **Reversibility:** Low-to-medium if implemented centrally before endpoint proliferation. **Unlocks:** safe exposure of browser-facing endpoints, not authorization. **Risk if wrong:** blocked legitimate staff, credentialed cross-origin access, spoofed proxy IPs or ineffective limits. **Early spike:** preflight, allowed/disallowed origins, credentials, representative rate-limit burst, forwarded IP trust and health endpoint behavior. **Confirm:** Owner policy/origins; Dev Lead implements; Security reviewer checks proxy and exceptions.
 
@@ -176,7 +176,7 @@
 **Question:** What is the smallest demonstrable product slice to approve after the database/security foundations?
 **Related OQ:** OQ-033 (scope), OQ-036 (engine); OQ-001/003/004/005 for unit/group/hold rules; OQ-019/034/041/045 for real guest/auth data; OQ-031 for funded pilot and operator.
 
-**Recommendation — Proposed – chờ Owner:** a private synthetic-data demonstration of `PROP → ROOM → BOOK (hold)` with one property, a configured room inventory and a hold transition. Keep multi-property keys and property scope from the start. Do not infer sale-unit/parent-child behavior, deposit deadline, overbooking or group booking.
+**Owner decision — Approved D8 test slice:** synthetic `PROP → ROOM → BOOK (hold)` only. Assumptions ASM-001/002/004/005 are test-only and listed in `DECISIONS.md`; they close no OQs and are not a product baseline. No authentication/RBAC or guest, rate engine, payment/folio, Night Audit, CHN, NTF, RPT or AST behavior is included.
 
 | Option | Advantages | Disadvantages / risks |
 |---|---|---|
@@ -207,7 +207,7 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 | Git LFS | May improve handling of large binary files and checkout behavior. | Does not grant distribution rights or make content private; LFS pointers still reference downloadable objects and old Git history remains. Adds service/quota/dependency considerations. |
 | Defer visibility decision | No visibility change or history rewrite by the agent. | Current visibility/rights remain unverified; if public, PDFs may already be exposed. |
 
-**Recommendation — Proposed – chờ Owner:** do not change visibility or remove tracked PDFs in this task. Owner/admin should verify actual visibility immediately and prefer private access while rights are reviewed. Decide whether to retain in Git, move to a restricted document system, or use LFS only after rights and history implications are understood. A new-file deletion does not purge old commits; history rewriting requires a separate migration plan and explicit authorization.
+**Owner decision — Not applicable (test project):** do not change repository visibility and do not delete the PDFs. D9 is closed for this reason.
 
 **Reversibility:** Low if public exposure/history clones; medium for changing future storage with coordination. **Unlocks:** baseline distribution decision. **Risk if wrong:** unauthorized redistribution or falsely assuming deletion/LFS retracts data. **Early check:** inspect remote host visibility/access list and rights for each source file; no file content is sent by this proposal. **Confirm:** Owner with document/IP rights holder and repository administrator; legal counsel as needed.
 
@@ -225,9 +225,9 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 | Keep all audit informational | Never blocks delivery due to registry advisory churn. | Vulnerabilities can persist unnoticed or be accepted implicitly. |
 | Dependabot weekly PRs, grouped only after review, limited concurrency | Regular update cadence and visibility; maintainers review lockfile impact. | PR noise and CI load; automated merges can break compatibility/security assumptions. |
 
-**Recommendation — Proposed – chờ Owner:** production audit blocks on high/critical with a documented, expiring exception process; moderate/low remain visible and triaged; full audit remains informational until Owner sets dev-dependency handling. Keep Dependabot weekly; do not enable auto-merge; set PR limits/groups after observing volume. Current CI and new scheduled audit are fail-soft; no threshold has been enacted.
+**Owner decision — Approved:** CI blocks high/critical advisories. Exceptions require a reason and expiry and are validated in CI; the expiry test uses a supplied date and fails on an expired entry. Moderate/low findings remain visible but do not block this policy gate.
 
-**Verification snapshot (2026-11-05):** `pnpm audit --prod` returned `No known vulnerabilities found` (exit 0). `pnpm audit` exited 1 with 2 dev-tree advisories: moderate `GHSA-g3hv-75wg-m249`, minimatch installed `10.2.6` through `eslint`, vulnerable `>=7.0.0 <11.0.1`, patched `>=11.0.1`; low `GHSA-g7r4-m6w7-qqqr`, esbuild installed `0.27.7` through `tsx` in API/Web/Worker, vulnerable `>=0.27.3 <0.28.1`, patched `>=0.28.1`. No versions were changed. Re-run audit at release time; this is a dated registry observation, not a guarantee.
+**Verification snapshot (2026-11-05):** `pnpm audit --prod` returned `No known vulnerabilities found` (exit 0). The full `pnpm audit` exits 1 for the one moderate dev-tree advisory `GHSA-g3hv-75wg-m249` in minimatch via ESLint; the required major upgrade to minimatch 11 is not compatible with the current ESLint dependency range, so the finding is in the expiring exception register through 2027-02-03. The low esbuild advisory `GHSA-g7r4-m6w7-qqqr` was resolved by a compatible tsx update; registry and lockfile resolve esbuild `0.28.2`. The high/critical policy and expiry tests pass. Re-run audit at release time; this is a dated registry observation, not a guarantee.
 
 **Reversibility:** Low for CI gate policy changes; moderate for Dependabot PR volume. **Unlocks:** meaningful automated release gate. **Risk if wrong:** either shipping exploitable code or blocking all work on non-runtime noise. **Early check:** run audit on a branch with sample advisory/exception policy and inspect CI behavior. **Confirm:** Owner chooses threshold/exception authority; Dev Lead implements triage/reporting.
 
@@ -254,7 +254,7 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 | Redis cache only | Can improve measured hot reads. | Invalidations/staleness can affect property and booking data; no measured bottleneck exists. |
 | Defer pending evidence | No dependency before a demonstrated requirement. | Async workflows remain unimplemented until decision. |
 
-**Recommendation — Proposed – chờ Owner:** defer Redis/BullMQ until an approved slice requires delayed/retryable work or measured read-load evidence warrants cache. Keep business intent durable outside Redis. Activation criteria: named job classes, duplicate/idempotency semantics, required delay/retry behavior, outage/replay runbook, capacity/cost evidence and accountable operator. **Reversibility:** low before job contracts, medium after queue semantics spread. **Unlocks:** job workers only. **Risk if wrong:** lost/double jobs or avoidable operational burden. **Spike:** synthetic outbox event and retry/duplicate recovery on disposable infrastructure. **Confirm:** Owner funds/accepts service; Dev Lead/Operations validates.
+**Owner decision — Approved:** defer Redis/BullMQ. Any later proposal requires a defined asynchronous use case and separate authorization.
 
 ## D12 — Hosting, backup, RPO/RTO and operations
 
@@ -287,32 +287,32 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 | Run only unit tests/mocks/SQLite | Fast and easy for local feedback. | Does not prove engine-specific migrations, partial indexes, locking, constraints or isolation; cannot be the only database integration gate. |
 | Defer DB CI until engine is approved | Avoids selecting an image/provider now. | Database implementation cannot be accepted until the real engine is exercised. |
 
-**Recommendation — Proposed – chờ Owner:** if PostgreSQL is selected, put engine-specific integration/migration tests in a Linux job with an ephemeral PostgreSQL service container and per-job database; keep Windows matrix for platform/unit/build checks unless Windows service-container support is separately demonstrated. Use synthetic data, no production credentials or customer data. This is conditional; current workflow has no database service.
+**Owner decision — Approved:** Linux CI uses an ephemeral PostgreSQL service with synthetic credentials and the pinned PostgreSQL 18.6 test image. Service lifetime is the CI job; no production provider or credential is used. Local Windows execution passed; a hosted Linux Actions run remains unverified.
 
 **Reversibility:** Low before CI suite exists; medium after many tests depend on environment setup. **Unlocks:** confidence in migrations, transactions and isolation against selected engine. **Risk if wrong:** mocks pass while production engine behavior differs, or state leaks between jobs. **Early check:** one disposable migration/constraint/rollback job and prove cleanup after failure. **Confirm:** Dev Lead proposes runner architecture; Owner approves CI resource/cost and data boundary.
 
 ### Gói triển khai nếu được duyệt
 
 - **Files:** `.github/workflows/ci.yml` or a dedicated `database-integration.yml`; API test scripts; DB test fixture/cleanup utilities; approved test config with placeholders only. Do not add a provider secret unless external database option is selected.
-- **Packages:** no new JavaScript package if using GitHub Actions service containers and existing selected ORM/driver. PostgreSQL service image exact tag is **Unverified until D1 and image support are approved**; do not use floating `latest`.
+- **Packages:** no new JavaScript package; GitHub Actions service container uses pinned PostgreSQL 18.6, matching the local integration image. This test image does not select a production version/provider.
 - **Tests:** migration from empty DB, migration repeat/version check, FK/unique/partial unique as chosen, transaction rollback, concurrent conflicting writes, cross-property negative scope, reset/cleanup after test failure, restore drill in a separate controlled environment.
 - **Verification:** workflow syntax; run locally against the same pinned engine image; run CI Linux service job; assert per-job isolated database and no credentials/data in logs. Run unit suite separately so test categories remain clear.
 - **Done when:** CI uses the selected engine/version, migration and integrity cases run deterministically, all temporary data/services are disposed, and failures retain useful redacted logs.
 - **Rollback:** revert the dedicated integration job without changing unit CI; preserve test files and rerun locally. Never switch to SQLite/mocks as an unnoticed replacement for failing engine-realistic checks.
 
-## Recommended approval order and dependency map
+## Historical approval order and current dependency map
 
 | Order | Decision | Opens / depends on |
 |---:|---|---|
 | 1 | D9 repository visibility/PDF rights | Closed as not applicable for the test project; no repository/PDF action. |
-| 2 | D1 database engine | Prerequisite for D2 concrete adapter, schema and D13 engine-specific tests. |
-| 3 | D3 module/framework/toolchain line | Jointly spike with D2; approve exact versions separately from engine. |
-| 4 | D2 ORM/data access | Depends on D1 and D3; opens migration/repository foundation. |
-| 5 | D4 validation and D5 HTTP security baseline | Must be resolved before business endpoints; independent of final guest schema. |
+| 2 | D1 database engine | Approved for test project; production provider/version/region/backup remain open under D12. |
+| 3 | D3 module/framework/toolchain line | ESM measurement only; official module system and product toolchain remain unchanged. |
+| 4 | D2 ORM/data access | Prisma 7 stable approved with reviewed SQL migrations and raw SQL for constraints/locking. |
+| 5 | D4 validation and D5 HTTP security baseline | Approved and implemented for the test API. |
 | 6 | D6 authorization and D7 guest/privacy behavior | Resolve OQ-041/OQ-034/OQ-047/OQ-045/OQ-019 before identity/guest/blacklist schemas. |
-| 7 | D10 audit policy and D13 DB CI | D10 can proceed independently; D13 depends on D1/D2 and CI resource decision. |
-| 8 | D11 Redis/BullMQ and D12 production operations | Defer until a scoped job requirement, OQ-031 resources and named operator exist. |
-| 9 | D8 first vertical slice | Requires OQ-033 and each stage’s listed OQs plus its technical foundations. |
+| 7 | D10 audit policy and D13 DB CI | Approved and implemented; hosted Linux Actions execution remains unverified. |
+| 8 | D11 Redis/BullMQ and D12 production operations | Redis/BullMQ deferred; D12 remains Proposed. |
+| 9 | D8 first vertical slice | Approved as synthetic PROP → ROOM → BOOK hold experiment; accepted ASM values close no OQs and are not a product baseline. |
 
 ## KHÔNG THỂ QUYẾT ĐỊNH BỞI AI
 
@@ -326,7 +326,7 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 
 ## Verification observations for this proposal
 
-- Registry audit run 2026-11-05: `pnpm audit --prod` → **No known vulnerabilities found** (exit 0); `pnpm audit` → exit 1, two dev-tree advisories listed under D10. No package version was changed.
-- Registry metadata queried with `pnpm view` on 2026-11-05 for candidate package versions/peers. These observations are time-sensitive and not Owner approval. The unqualified latest Prisma query returned `8.0.0-rc.30`; the proposal deliberately records stable 7.x candidate `7.10.1`, after querying the 7.x line. Recheck before any implementation.
+- Registry audit was rerun during implementation: `pnpm audit --prod` passed; `pnpm audit` reports one moderate minimatch development advisory, covered by the expiring exception through 2027-02-03. The high/critical policy and expiry tests pass. See D10 for the dated result and commands.
+- Registry metadata queried with `pnpm view` during implementation verified Prisma CLI/client/adapter `7.10.1`, `pg@8.23.1`, Zod `4.6.7`, Helmet `8.3.0`, `@nestjs/throttler@6.7.1`, and compatible tsx update `4.23.15`. These are test-project pins, not production technology approval. The unqualified latest Prisma query returned an 8.0.0 release candidate; Prisma 8 RC was not installed.
 - Current workflows use tags `actions/checkout@v4`, `pnpm/action-setup@v4`, `actions/setup-node@v4` in CI and scheduled audit. No exact action commit SHA was verified from installed local files; SHA values are **Unverified** and listed in `OWNER_CONFIRMATION_CHECKLIST.md`. No guessing/pinning was done.
-- Current Git snapshot before this proposal: commit `24cc06b` / 2026-11-05, 9 commits, 85 tracked paths. Recreate with `git rev-list --count HEAD`, `git ls-files | Measure-Object -Line` (PowerShell) or `git ls-files | wc -l` (POSIX); snapshot changes after later commits.
+- Historical Git snapshot when this proposal was drafted: commit `24cc06b` / 2026-11-05, 9 commits, 85 tracked paths. It predates the Owner-confirmed implementation commits and is not the current repository snapshot.

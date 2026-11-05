@@ -10,7 +10,7 @@ The Owner authorized a prototype repository foundation and empty API/Web/Worker 
 
 ## Owner-provided business direction (2026-11-05)
 
-The project owner confirmed single-owner operation with multiple properties from the first release and no SaaS for unrelated owners on 2026-11-05. The Owner also supplied planning ranges of **2–5 properties in the first 12 months** and **6–10 properties in months 12–24**. Initial room count is unknown. These are recorded in [DECISIONS.md](DECISIONS.md); OQ-032's business direction is answered and OQ-031 is partially answered. Pilot property, budget, staffing, timeline and operational ownership remain open. OQ-034 (guest/blacklist sharing), OQ-041 (roles across properties), privacy OQ-019 and other module policies remain open. Framework versions, ORM, module architecture and deployment choices remain proposals in [TECHNOLOGY_DECISION_PROPOSAL.md](TECHNOLOGY_DECISION_PROPOSAL.md).
+The project owner confirmed single-owner operation with multiple properties from the first release and no SaaS for unrelated owners on 2026-11-05. The Owner also supplied planning ranges of **2–5 properties in the first 12 months** and **6–10 properties in months 12–24**. Initial room count is unknown. These are recorded in [DECISIONS.md](DECISIONS.md); OQ-032's business direction is answered and OQ-031 is partially answered. Pilot property, budget, staffing, timeline and operational ownership remain open. OQ-034 (guest/blacklist sharing), OQ-041 (roles across properties), privacy OQ-019 and other module policies remain open. Prisma 7 is approved for the test project; remaining framework versions, module architecture and production deployment choices are proposals in [TECHNOLOGY_DECISION_PROPOSAL.md](TECHNOLOGY_DECISION_PROPOSAL.md).
 
 ### Operational sizing context and limits
 
@@ -23,12 +23,13 @@ The project owner confirmed single-owner operation with multiple properties from
 
 - D6 documents user × property × role with explicit Owner scope as the default boundary. This does not settle role cardinality, authentication or OQ-041; no authentication/RBAC is implemented in D8.
 - D7 uses no cross-property guest or blacklist sharing as the default boundary. This does not close OQ-034.
+- D11 defers Redis/BullMQ. The test slice uses PostgreSQL synchronously and adds no queue/cache service.
 - D8 is a synthetic-data PROP → ROOM → BOOK hold experiment only. Its ASM assumptions are listed in [DECISIONS.md](DECISIONS.md), are configurable when used in code, and are not product baseline decisions.
 - Do not use real personal data or include PII in seed, tests or logs. No payment/folio/rate engine, Night Audit, CHN, NTF, RPT or AST is in this slice.
 
 ## Proposed system shape (remaining technology approval pending)
 
-Use a Modular Monolith as the initial application architecture: Next.js staff web application calls a NestJS REST API; PostgreSQL is the primary source of truth; Redis + BullMQ carry asynchronous/retryable jobs. API and worker may run as separate processes while sharing the same backend application modules and database transaction rules. A pnpm TypeScript monorepo and Docker Compose for local development are proposed. Do not start with microservices, Kubernetes or native mobile unless a documented requirement justifies them. These are architecture proposals pending explicit technology approval.
+The remaining architecture proposal is a Modular Monolith with a Next.js staff web application calling a NestJS REST API. PostgreSQL is approved as the test project's primary database; Redis/BullMQ are deferred under D11. API and worker process topology, pnpm monorepo and production deployment remain proposals. Do not start with microservices, Kubernetes or native mobile unless a documented requirement justifies them.
 
 ## Multi-property boundaries from first release
 
@@ -98,12 +99,12 @@ Source labels remain authoritative: `[C]` is the BA's confirmed/baselined classi
 - Encrypt identity documents, use a protected blind index for matching, mask personal data, and audit unmask/export. (BR-063, BR-066; BA Part 1, pp.22–23.)
 - Proposed service targets `[A]`: 99.5% monthly availability, RPO ≤15 minutes, RTO ≤4 hours; calendar 30 rooms ×31 days under 2 seconds, booking save under 1 second, 20 concurrent users/property. (BA Part 1, p.9.)
 
-## Recommended stack (unapproved)
+## Remaining proposed technology and approved test directions
 
 | Layer | Proposal | Evidence/status |
 |---|---|---|
 | Database | PostgreSQL with partial unique indexes, CHECK and JSONB | Engine approved for the test project; provider/version/region/backup remain open under D12. RLS is not approved or required by this decision. |
-| Backend | NestJS + TypeScript | Proposed / pending approval; versions, Modular Monolith and Prisma remain proposals. |
+| Backend | NestJS + TypeScript | Framework and module architecture remain proposed; Prisma 7 is approved for the test project under D2. |
 | Cache/queue | Redis + BullMQ | Deferred by Owner under D11. |
 | Web | Next.js + React + TypeScript | Proposed / pending approval; versions, App Router, Tailwind, TanStack Query and Zustand remain proposals (technology proposal, p.3; UI proposal, pp.1, 3). |
 | Mobile operations | No native mobile application in the initial implementation unless an approved requirement justifies it | Flutter/React Native are deferred alternatives, not selected; the BA deployment proposal specifies browser access for the initial rollout (technology proposal, p.3; deployment proposal, p.3). |
