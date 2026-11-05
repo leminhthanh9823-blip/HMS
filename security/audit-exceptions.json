@@ -1,0 +1,10 @@
+{
+  "exceptions": [
+    {
+      "advisory": "GHSA-g3hv-75wg-m249",
+      "package": "minimatch",
+      "reason": "The patched minimatch line is 11.x, a major version outside the current ESLint 10 dependency range (^10.2.6). Keep this development-only finding time-limited until ESLint supports the patched major or a compatible upgrade path is verified.",
+      "expiresOn": "2027-02-03"
+    }
+  ]
+}
