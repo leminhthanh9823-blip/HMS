@@ -23,7 +23,9 @@
       "multer": "2.5.0"
     },
     "onlyBuiltDependencies": [
-      "esbuild"
+      "esbuild",
+      "@prisma/engines",
+      "prisma"
     ]
   },
   "devDependencies": {
