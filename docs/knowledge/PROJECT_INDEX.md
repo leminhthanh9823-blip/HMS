@@ -22,6 +22,8 @@ The pnpm/NestJS/Next.js choices and package versions used for the bounded protot
 | Proposed architecture, property isolation, authorization, guest scope and timezone | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Technology comparison, candidate-version compatibility and approval proposal | [TECHNOLOGY_DECISION_PROPOSAL.md](TECHNOLOGY_DECISION_PROPOSAL.md) |
 | Operational sizing baseline, Phase 0 gates, 19-module classification and Owner decision package | [PHASE_0_IMPLEMENTATION_PLAN.md](PHASE_0_IMPLEMENTATION_PLAN.md) |
+| Gate C.0 repository/architecture readiness audit | [GATE_C0_READINESS_AUDIT.md](GATE_C0_READINESS_AUDIT.md) |
+| Gate C.1 Owner decisions D-01–D-08 and approval sheet | [OWNER_DECISION_PACKAGE.md](OWNER_DECISION_PACKAGE.md) |
 | FR/NFR inventory and traceability | [REQUIREMENTS_INDEX.md](REQUIREMENTS_INDEX.md) |
 | Approval status and source-marked baselines | [DECISIONS.md](DECISIONS.md) |
 | Questions, assumptions, conflicts, approvals needed | [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) |

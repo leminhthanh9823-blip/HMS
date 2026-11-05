@@ -1,5 +1,7 @@
 # Architecture and technology proposals
 
+Gate C.1 owner-facing decisions D-01–D-08, including database/ORM options and approval dependencies, are assembled in [OWNER_DECISION_PACKAGE.md](OWNER_DECISION_PACKAGE.md). That package is Proposed / Pending Approval and does not change any architecture choice below.
+
 Nothing in this file is an approved architecture decision unless separately recorded in [DECISIONS.md](DECISIONS.md). The BA contains architectural constraints; the three later reports contain recommendations.
 
 ## Bounded Gate A/B implementation record (2026-11-05)

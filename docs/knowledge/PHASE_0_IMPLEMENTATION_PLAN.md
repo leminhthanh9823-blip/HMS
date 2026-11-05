@@ -1,5 +1,9 @@
 # HMS Phase 0 implementation plan
 
+### Gate C.0.1 / C.1 preparation boundary (2026-11-05)
+
+Repository baseline review and the Owner Decision Package are preparation and documentation only. They do not authorize Database Foundation implementation, resolve any OQ, or approve PostgreSQL, an ORM, a provider/region, identity policy, guest sharing, or a business module. See [GATE_C0_READINESS_AUDIT.md](GATE_C0_READINESS_AUDIT.md) and [OWNER_DECISION_PACKAGE.md](OWNER_DECISION_PACKAGE.md). Implementation requires explicit Owner approval of the bounded work package and its dependencies; Database Foundation must not be inferred from completion of this preparation gate.
+
 > **Status: Gate A and Gate B implemented within the bounded scope authorized by the Owner on 2026-11-05.** This implementation record does not approve the product architecture or technology stack. The remaining plan and technology choices remain proposals; no database creation or migrations were authorized.
 
 ### Gate A/B implementation record (2026-11-05)
