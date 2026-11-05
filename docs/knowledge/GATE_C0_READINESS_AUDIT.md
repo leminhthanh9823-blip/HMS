@@ -17,13 +17,13 @@ Commands run: `git status --short --untracked-files=all`, `git ls-files`, `git l
 | Check | Result |
 |---|---|
 | Branch | `main` |
-| Git history and tracked paths | At commit `ade4d0d` / 2026-11-05: 7 commits and 81 paths in `git ls-files` |
+| Git history and tracked paths | Historical snapshot at commit `ade4d0d` / 2026-11-05: 7 commits and 81 paths. Current counts must be regenerated with the commands below. |
 | Untracked | None at the snapshot before this documentation update |
 | Staged | None at the snapshot before this documentation update |
 | `git diff --check` | No whitespace errors in the checks recorded for the current changes |
 | Ignored artifacts observed | root/app `node_modules`, API/worker `dist`, web `.next`, `*.tsbuildinfo` |
 
-The previous statement that all workspace files were untracked is stale. The snapshot above was captured from `git rev-list --count HEAD`, `git ls-files | Measure-Object -Line` and `git log -1 --format='%h %cs'`. Reproduce it on PowerShell with those commands; on a POSIX shell use `git rev-list --count HEAD`, `git ls-files | wc -l` and `git log -1 --format='%h %cs'`. Counts are tied to commit `ade4d0d` / 2026-11-05 and will naturally change at later commits. Source code is under `apps/` and workspace `packages/config/`; test sources are `*.test.ts(x)`. Project knowledge is `docs/knowledge/`. Original BA and proposal PDFs are `docs/source/`. Generated files and local dependencies are ignored. No committed secret was found in `.env.example`; the audit only scanned files in the listed workspace and is not a forensic secret scanner.
+The previous statement that all workspace files were untracked is stale. The historical snapshot above was captured from `git rev-list --count HEAD`, `git ls-files | Measure-Object -Line` and `git log -1 --format='%h %cs'` at that time. Reproduce current counts on PowerShell with those commands; on a POSIX shell use `git rev-list --count HEAD`, `git ls-files | wc -l` and `git log -1 --format='%h %cs'`. Counts naturally change at later commits. Source code is under `apps/` and workspace `packages/config/`; test sources are `*.test.ts(x)`. Project knowledge is `docs/knowledge/`. Original BA and proposal PDFs are `docs/source/`. Generated files and local dependencies are ignored. No committed secret was found in `.env.example`; the audit only scanned files in the listed workspace and is not a forensic secret scanner.
 
 `.gitignore` excludes `node_modules`, `dist`, `*.tsbuildinfo`, `.next`, `out`, `coverage`, `.turbo`, `.env`, `.env.*`, logs and OS files, and explicitly permits `.env.example`. Review any future env examples for real credentials before staging.
 
@@ -185,13 +185,13 @@ Do not depend on universal down migrations. Use rollback only when operation is 
 | Environment configuration | Can Defer | `.env.example` safe; production environment/provider unknown | Repository configuration reviewed in §15; production provider remains unselected | Decide secrets/runtime configuration before deploy |
 | Backup/restore | Needs Decision | No provider, RPO/RTO or owner identified | BA Part 1, NFR-AVL-001 `[A]`, p.9; operational owner unresolved | Assign operator and recovery objectives |
 | Database testing strategy | Ready (preparation only) | PostgreSQL-specific plan in §13 | Technical testing proposal in this audit, §13 | Approve CI resource/test policy at implementation |
-| Initial Git baseline | Completed in Git; rights review remains | At commit `ade4d0d` / 2026-11-05: 7 commits and 81 tracked paths; inventory context in §15 | `git rev-list --count HEAD`, `git ls-files | Measure-Object -Line` and `git log -1 --format='%h %cs'`; source-PDF distribution rights are a separate owner review | Confirm source-PDF distribution rights and any future baseline changes |
+| Initial Git baseline | Completed in Git; rights review remains | Historical snapshot at `ade4d0d` / 2026-11-05; regenerate current count using the commands in §2 | `git rev-list --count HEAD`, `git ls-files | Measure-Object -Line` and `git log -1 --format='%h %cs'`; source-PDF distribution rights are a separate owner review | Confirm source-PDF distribution rights and any future baseline changes |
 
 **Architecture Preparation:** may continue (concepts, diagrams, decision package). **Implementation Authorization:** absent. Do not create database/schema/migrations until Owner confirms database technology and scope; Dev Lead validates engine/provider fit; the relevant access/guest/legal policies are resolved for included entities; and a bounded implementation work package is explicitly authorized. OQ-041 and OQ-034 block their dependent schemas/behaviors even if unrelated neutral infrastructure is later authorized.
 
 ## 15. Initial Git baseline inventory
 
-This section began as a candidate inventory. At commit `ade4d0d` / 2026-11-05, Git had seven commits and 81 tracked paths (`git rev-list --count HEAD`, `git ls-files | Measure-Object -Line`); therefore the old “initial commit procedure” is historical guidance and must not be read as a statement that the repository remains uncommitted. Reproduce the counts with those commands in PowerShell, or use `git ls-files | wc -l` on POSIX shells. The inventory is retained as rationale, not as an instruction to stage files again.
+This section began as a candidate inventory. Its original snapshot was commit `ade4d0d` / 2026-11-05; that count is historical and the old “initial commit procedure” must not be read as a statement that the repository remains uncommitted. Regenerate current counts using the commands in §2. The inventory is retained as rationale, not as an instruction to stage files again.
 
 ### A. Required source, tests, configuration and build/run files – Include
 

@@ -6,6 +6,8 @@
 
 The Owner authorized pnpm `10.34.9`, NestJS `11.1.16`, Next.js `16.4.5`, TypeScript `5.9.3`, ESLint `10.14.0` and Prettier `3.9.10` for the repository foundation and empty shells. Node.js `24.11.1` was the available runtime; NestJS 11 was used to fit it. This records what was implemented, not an Owner-approved architecture selection. API/Web/Worker process shape, exact versions and all technology families remain Proposed / Pending Approval for the HMS product. PostgreSQL is not installed or configured, and OQ-036 remains open.
 
+**Later security maintenance overlay (snapshot `ade4d0d`, 2026-11-05):** the current API manifest uses NestJS `11.1.29` for `@nestjs/common`, `@nestjs/core` and `@nestjs/platform-express`, plus root override `multer@2.5.0`. The recorded Gate A/B baseline above remains `11.1.16`; written Owner confirmation for the patch/override is still requested in [OWNER_CONFIRMATION_CHECKLIST.md](OWNER_CONFIRMATION_CHECKLIST.md). This overlay does not update the Gate A/B authorization record or approve product technology.
+
 ## 1. Business direction and decision status
 
 | Statement | Status in this proposal |

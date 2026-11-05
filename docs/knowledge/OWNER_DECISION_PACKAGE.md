@@ -392,9 +392,9 @@ Owner may answer any row independently. “Defer” is a valid answer and leaves
 
 ## 8. Repository baseline handoff
 
-Current repository status was rechecked for this package. Unlike the older Gate C.0 snapshot, the workspace now has an existing `initial commit` (`ab873de`); this agent did not create it. Current branch is `main`; 74 paths are tracked; index and working tree were clean before this package's documentation edits; no staged or untracked files were present. The seven `docs/source/` PDFs are already tracked in that commit. Their rights/sharing review is still a **manual owner review** item; do not delete or rewrite Git history as part of this decision package.
+Historical repository snapshot for this package: at commit `7202145` / 2026-11-05, the branch was `main`, Git had 2 commits and 77 tracked paths. Reproduce counts at any later point with `git rev-list --count HEAD`, `git ls-files | Measure-Object -Line` (PowerShell) or `git ls-files | wc -l` (POSIX), and get the snapshot identifier/date with `git log -1 --format='%h %cs'`. The seven `docs/source/` PDFs are tracked in the existing history. Their rights/sharing review remains a **manual owner review** item; do not delete files or rewrite history as part of this decision package.
 
-The tracked candidate inventory is the current commit itself. Main groups are:
+The original tracked candidate inventory was inspected at the snapshot above. Main groups are:
 
 - Root policy/config/build: `.editorconfig`, `.gitignore`, `.prettierignore`, `AGENTS.md`, `README.md`, `eslint.config.mjs`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `tsconfig.json`.
 - CI: `.github/workflows/ci.yml`.

@@ -2,6 +2,24 @@
 
 This checklist records questions that need an explicit answer from the named decision owner. It does not answer or close any OQ, approve a technology, or change BA requirements. Keep `[C]`, `[A]` and `[Q]` labels at their source status. Record confirmed answers with evidence before updating `DECISIONS.md` or resolving an OQ.
 
+Review [DECISION_PROPOSALS.md](DECISION_PROPOSALS.md) by decision code. Owner/Dev Lead can respond independently to D1–D13; all recommendations remain Proposed – waiting for Owner. The recommended review order and dependencies are summarized at the end of that package.
+
+| Code | Proposal | Owner response |
+|---|---|---|
+| D1 | Primary database engine | ___ / defer |
+| D2 | ORM/data access | ___ / defer |
+| D3 | Module system/framework/toolchain | ___ / defer |
+| D4 | Request validation | ___ / defer |
+| D5 | HTTP security baseline | ___ / defer |
+| D6 | Multi-property authorization (OQ-041) | ___ / defer |
+| D7 | Guest/blacklist/data scope (OQ-034/047/045) | ___ / defer |
+| D8 | First MVP vertical slice (OQ-033) | ___ / defer |
+| D9 | Repository visibility/source PDFs | ___ / defer |
+| D10 | CI audit threshold/Dependabot | ___ / defer |
+| D11 | Redis/BullMQ | ___ / defer |
+| D12 | Hosting/backup/RPO-RTO/operations | ___ / defer |
+| D13 | Database integration tests in CI | ___ / defer |
+
 | ID / topic | Question for confirmation | Decision owner | Impact if unresolved | Source / traceability |
 |---|---|---|---|---|
 | Gate A/B authorization and toolchain | Please confirm in writing whether Gate A/B was authorized, the bounded scope, and the exact toolchain versions covered by that authorization. Does it authorize only the existing prototype, or any later product stack choice? | Owner | The prototype record cannot be treated as evidence for future work or product technology approval. | `OPEN_QUESTIONS.md`, Material inconsistencies; `DECISIONS.md`; Project Owner reference date 2026-11-05 |
@@ -13,6 +31,7 @@ This checklist records questions that need an explicit answer from the named dec
 | API rate limiting | What rate limits and trusted-proxy behavior should apply before business endpoints are exposed? | Owner; Dev Lead recommends technical values | Abuse controls cannot be tuned or represented as approved; do not add rate-limiting dependencies before approval. | Pre-Gate C hardening backlog |
 | Next.js ESLint and Web test strategy | Should `eslint-config-next` be adopted, and what level of component/browser testing is required beyond static-markup tests? | Dev Lead proposes; Owner approves quality gate | Framework-specific lint rules and interactive browser behavior remain less thoroughly checked. | Pre-Gate C hardening backlog |
 | Audit severity threshold | Which advisory severity should fail CI, and what exception process/expiry is acceptable so informational audit can stop being fail-soft? | Owner; Dev Lead recommends policy | Audit findings remain informational and do not fail the main branch. | `.github/workflows/ci.yml`; dependency audit workflow |
+| GitHub Actions immutable SHAs | Please confirm the full commit SHAs for `actions/checkout@v4`, `pnpm/action-setup@v4` and `actions/setup-node@v4` in both workflows, or authorize an authoritative-source lookup before pinning. | Dev Lead verifies; Owner sets repository policy | Workflows currently use major tags, so an action release tag can move; no SHA was guessed or pinned without local verification. | `.github/workflows/ci.yml`; `.github/workflows/dependency-audit.yml`; local checkout contains no verified action commit metadata |
 | OQ-036 — database | Which primary database engine should HMS use? If selected, what major/version policy, hosting/provider, region/data-residency expectations and operational owner should be evaluated? | Owner; Dev Lead validates technical fit | Database engine selection and HMS schema/migrations remain blocked; provider, cost and recovery design remain open. | Technology proposal, §§4, 12; `OPEN_QUESTIONS.md`, OQ-036 (technology proposal, pp.1–3; not a BA-origin OQ) |
 | OQ-041 — multi-property authorization | May one employee belong to multiple properties? May their role differ by property? What access does Owner have, can it be limited for an employee, and who may switch the active property context? | Owner; Security/Dev Lead advise controls | Membership cardinality, role grants, context switching and cross-property authorization cannot be finalized. | BA Part 2, pp.16–17 and p.41; `OPEN_QUESTIONS.md`, OQ-041 |
 | OQ-034 — guest sharing | Which guest fields and history, if any, may be shared between properties? Should the BA chain-level guest behavior be preserved, changed to property isolation, or handled through a field-scoped hybrid? Who may match/link profiles? | Owner, with legal/privacy advice for personal-data sharing | Guest identity/profile ownership, matching, access, reporting and migration cannot be finalized. Choosing property isolation would change or limit BA chain-level behavior and needs BA change control. | BA Part 3, FR-GST-001/003/007 and AC-GST-001-01/AC-GST-003-01, pp.19–22; BA Part 1, p.35; `OPEN_QUESTIONS.md`, OQ-034 |
