@@ -24,6 +24,7 @@ Existing pnpm/NestJS/Next.js choices and package versions remain bounded prototy
 | Operational sizing baseline, Phase 0 gates, 19-module classification and Owner decision package | [PHASE_0_IMPLEMENTATION_PLAN.md](PHASE_0_IMPLEMENTATION_PLAN.md) |
 | Gate C.0 repository/architecture readiness audit | [GATE_C0_READINESS_AUDIT.md](GATE_C0_READINESS_AUDIT.md) |
 | Owner confirmations and pre-Gate C hardening backlog | [OWNER_CONFIRMATION_CHECKLIST.md](OWNER_CONFIRMATION_CHECKLIST.md) |
+| D3 isolated ESM measurement and limits | [SPIKE_ESM.md](SPIKE_ESM.md) |
 | Proposed owner decisions D1–D13 and conditional implementation plans | [DECISION_PROPOSALS.md](DECISION_PROPOSALS.md) |
 | Gate C.1 Owner decisions D-01–D-08 and approval sheet | [OWNER_DECISION_PACKAGE.md](OWNER_DECISION_PACKAGE.md) |
 | FR/NFR inventory and traceability | [REQUIREMENTS_INDEX.md](REQUIREMENTS_INDEX.md) |
