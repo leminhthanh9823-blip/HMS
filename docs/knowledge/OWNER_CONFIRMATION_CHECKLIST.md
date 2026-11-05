@@ -2,23 +2,23 @@
 
 This checklist records questions that need an explicit answer from the named decision owner. It does not answer or close any OQ, approve a technology, or change BA requirements. Keep `[C]`, `[A]` and `[Q]` labels at their source status. Record confirmed answers with evidence before updating `DECISIONS.md` or resolving an OQ.
 
-Review [DECISION_PROPOSALS.md](DECISION_PROPOSALS.md) by decision code. Owner/Dev Lead can respond independently to D1–D13; all recommendations remain Proposed – waiting for Owner. The recommended review order and dependencies are summarized at the end of that package.
+Owner confirmations recorded 2026-11-05 are in [DECISIONS.md](DECISIONS.md). D12 remains Proposed; D6/D7 boundaries do not close OQ-041/OQ-034. See [DECISION_PROPOSALS.md](DECISION_PROPOSALS.md) for scope and implementation packages.
 
 | Code | Proposal | Owner response |
 |---|---|---|
-| D1 | Primary database engine | ___ / defer |
-| D2 | ORM/data access | ___ / defer |
-| D3 | Module system/framework/toolchain | ___ / defer |
-| D4 | Request validation | ___ / defer |
-| D5 | HTTP security baseline | ___ / defer |
-| D6 | Multi-property authorization (OQ-041) | ___ / defer |
-| D7 | Guest/blacklist/data scope (OQ-034/047/045) | ___ / defer |
-| D8 | First MVP vertical slice (OQ-033) | ___ / defer |
-| D9 | Repository visibility/source PDFs | ___ / defer |
-| D10 | CI audit threshold/Dependabot | ___ / defer |
-| D11 | Redis/BullMQ | ___ / defer |
-| D12 | Hosting/backup/RPO-RTO/operations | ___ / defer |
-| D13 | Database integration tests in CI | ___ / defer |
+| D1 | Primary database engine | Approved: PostgreSQL; D12 details remain open |
+| D2 | ORM/data access | Approved: Prisma 7 stable; reviewed SQL migrations; raw SQL for constraints/locking |
+| D3 | Module system/framework/toolchain | ESM measurement spike only; no official module switch |
+| D4 | Request validation | Approved: Zod + explicit Nest pipes |
+| D5 | HTTP security baseline | Approved: narrow CORS allowlist, security headers, rate limiting |
+| D6 | Multi-property authorization (OQ-041) | Documentation boundary approved; OQ remains open |
+| D7 | Guest/blacklist/data scope (OQ-034/047/045) | No cross-property sharing as default boundary; OQ-034 remains open |
+| D8 | First MVP vertical slice (OQ-033) | Synthetic PROP → ROOM → BOOK hold only; no authentication |
+| D9 | Repository visibility/source PDFs | Not applicable (test project); no visibility/PDF change |
+| D10 | CI audit threshold/Dependabot | Approved: block high/critical; reasoned, time-limited exceptions |
+| D11 | Redis/BullMQ | Approved: defer |
+| D12 | Hosting/backup/RPO-RTO/operations | Proposed; not approved |
+| D13 | Database integration tests in CI | Approved: ephemeral PostgreSQL on Linux |
 
 | ID / topic | Question for confirmation | Decision owner | Impact if unresolved | Source / traceability |
 |---|---|---|---|---|

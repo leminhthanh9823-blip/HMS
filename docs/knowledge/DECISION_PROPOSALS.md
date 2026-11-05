@@ -1,10 +1,12 @@
 # HMS Decision Proposals
 
-**Status:** All recommendations below are **Proposed – chờ Owner**. They are discussion inputs, not approvals, do not change any OQ, and must not be copied to `DECISIONS.md` until the Owner explicitly confirms them. Product scope and BA source labels remain unchanged.
+**Status:** Owner confirmed the bounded directions for D1–D11 and D13 on 2026-11-05; see [DECISIONS.md](DECISIONS.md) for evidence and boundaries. D12 remains **Proposed – chờ Owner**. D3 approves an ESM spike only. D6/D7 are documentation boundaries only and do not close OQ-041/OQ-034. D8 is a synthetic test slice only; its accepted ASM values are not business decisions or a product baseline and close no OQs. Product scope and BA source labels remain unchanged.
 
 **Known Owner direction:** HMS is single-owner, multi-property from its first release, and not SaaS for unrelated owners. Planning range is 2–5 properties in the first 12 months and 6–10 in months 12–24. Initial room count is unknown. These facts do not establish workload, budget, hosting, or staffing.
 
 ## D1 — Primary database engine
+
+**Owner status:** Approved 2026-11-05 (Owner confirmation in conversation): PostgreSQL. Provider, production version, region and backup remain open under D12.
 
 **Question:** Which primary relational database should own HMS operational and financial state?
 **Related OQ:** OQ-036; OQ-031 for operational sizing/provider budget; OQ-019 for personal data and region.
@@ -30,6 +32,8 @@
 - **Rollback:** before durable data, revert config/package and remove disposable DB service. After durable data, do not down-migrate destructively; restore from backup or use an approved forward migration/data export plan.
 
 ## D2 — ORM or data access
+
+**Owner status:** Approved 2026-11-05 (Owner confirmation in conversation): Prisma 7 stable, not Prisma 8 RC; reviewed SQL migrations; raw SQL permitted for constraints and locking.
 
 **Question:** Which abstraction should own mapping, query composition and migration workflow, conditional on D1?
 **Related OQ:** OQ-036; OQ-041/OQ-034 for later schema semantics; D3 for module/runtime compatibility.
@@ -57,6 +61,8 @@
 
 ## D3 — Module system and framework/toolchain line
 
+**Owner status:** Approved for ESM measurement spike only, 2026-11-05 (Owner confirmation in conversation). No official module-system switch.
+
 **Question:** Keep the prototype’s CommonJS/Node resolution and Nest 11/TypeScript 5.9, or move product implementation to ESM, TypeScript 6 and Nest 12?
 **Related OQ:** OQ-036 and technology/version approval; D2 (Prisma 7’s proposed ESM setup); material inconsistency in `OPEN_QUESTIONS.md`.
 
@@ -72,6 +78,8 @@
 **Reversibility:** Medium before domain code, high after app/runtime packages and tools depend on the module format. **Unlocks:** reliable module/build scripts and ORM integration. **Risk if wrong:** loader/DI/test/build failures, production startup mismatch, duplicate dependency formats. **Early spike:** compile/start API + worker with one explicitly injected service, generate/connect ORM client, run Windows/Linux tests and shutdown. **Confirm:** Owner for toolchain/version authorization; Dev Lead for migration plan and compatibility.
 
 ## D4 — Request validation
+
+**Owner status:** Approved 2026-11-05 (Owner confirmation in conversation): Zod with explicit Nest pipes.
 
 **Question:** Which schema model and Nest integration should validate all business request input?
 **Related OQ:** OQ-033 for included endpoints; OQ-019 for personal-data minimization; D3 and Nest version.
@@ -98,6 +106,8 @@
 
 ## D5 — HTTP security baseline: CORS, headers and rate limits
 
+**Owner status:** Approved 2026-11-05 (Owner confirmation in conversation): narrow CORS allowlist, security headers and rate limiting.
+
 **Question:** What baseline and configuration must be in place before any business endpoint is exposed?
 **Related OQ:** OQ-019 (PII/security response); OQ-031 (operator); D4; D8/OQ-033.
 
@@ -123,6 +133,8 @@
 
 ## D6 — Multi-property authorization (OQ-041)
 
+**Owner status:** Documentation boundary approved 2026-11-05 (Owner confirmation in conversation): user × property × role with explicit Owner scope. OQ-041 remains open; no authentication/RBAC implementation in D8.
+
 **Question:** How are Owner and employee access grants scoped across properties?
 **Related OQ:** OQ-041; OQ-045 for identity document access; OQ-019 for personal data.
 
@@ -141,6 +153,8 @@
 
 ## D7 — Guest records, blacklist and sensitive identity data
 
+**Owner status:** Default documentation boundary approved 2026-11-05 (Owner confirmation in conversation): no cross-property guest or blacklist sharing. OQ-034 remains open.
+
 **Question:** What guest data is local to a property, shared across the chain, and visible to which roles?
 **Related OQ:** OQ-034, OQ-047 and OQ-045; OQ-019 privacy/retention.
 
@@ -156,6 +170,8 @@
 **Choices required:** fields shared (identity key/contact/document/history separately); cross-property match authority; blacklist scope and viewers; warning vs hard block vs configurable; override roles/reason; expiry/retention; correction/false-positive path. **Unlocks:** guest and blacklist schema/workflows only. **Risk if wrong:** privacy breach, discriminatory/mistaken block, duplicate guest or violation of chain-level BA. **Reversibility:** high with real data. **Spike:** synthetic-only identity matching with no PII; test link/unlink, property scopes and audit. **Confirm:** Owner with legal/privacy advisor and BA/product owner; managers define operational process.
 
 ## D8 — First MVP vertical slice (OQ-033)
+
+**Owner status:** Approved as a synthetic-data test slice only, 2026-11-05 (Owner confirmation in conversation): PROP → ROOM → BOOK (hold). No authentication, real PII, or product baseline. ASM-001/002/004/005 are test assumptions only; their OQs remain open.
 
 **Question:** What is the smallest demonstrable product slice to approve after the database/security foundations?
 **Related OQ:** OQ-033 (scope), OQ-036 (engine); OQ-001/003/004/005 for unit/group/hold rules; OQ-019/034/041/045 for real guest/auth data; OQ-031 for funded pilot and operator.
@@ -178,6 +194,8 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 
 ## D9 — Repository visibility and seven tracked PDFs
 
+**Owner status:** Not applicable (test project), approved 2026-11-05 (Owner confirmation in conversation). Do not change repository visibility or remove PDFs; close D9 for this reason.
+
 **Question:** Should repository access be public or private, and what is the authorized distribution route for the seven source PDFs?
 **Related OQ:** Owner confirmation checklist; legal/IP and privacy responsibilities under OQ-019.
 
@@ -194,6 +212,8 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 **Reversibility:** Low if public exposure/history clones; medium for changing future storage with coordination. **Unlocks:** baseline distribution decision. **Risk if wrong:** unauthorized redistribution or falsely assuming deletion/LFS retracts data. **Early check:** inspect remote host visibility/access list and rights for each source file; no file content is sent by this proposal. **Confirm:** Owner with document/IP rights holder and repository administrator; legal counsel as needed.
 
 ## D10 — CI dependency audit threshold and Dependabot
+
+**Owner status:** Approved 2026-11-05 (Owner confirmation in conversation): block high/critical; exceptions require reason and expiry.
 
 **Question:** Which findings block CI, and how should automated update PRs be managed?
 **Related OQ:** Owner security/operations policy; D5.
@@ -222,6 +242,8 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 
 ## D11 — Redis and BullMQ
 
+**Owner status:** Approved 2026-11-05 (Owner confirmation in conversation): defer Redis/BullMQ.
+
 **Question:** Is a separate queue/cache service needed for the first authorized product slice?
 **Related OQ:** OQ-033, OQ-031, D1/D2 and named operations owner.
 
@@ -235,6 +257,8 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 **Recommendation — Proposed – chờ Owner:** defer Redis/BullMQ until an approved slice requires delayed/retryable work or measured read-load evidence warrants cache. Keep business intent durable outside Redis. Activation criteria: named job classes, duplicate/idempotency semantics, required delay/retry behavior, outage/replay runbook, capacity/cost evidence and accountable operator. **Reversibility:** low before job contracts, medium after queue semantics spread. **Unlocks:** job workers only. **Risk if wrong:** lost/double jobs or avoidable operational burden. **Spike:** synthetic outbox event and retry/duplicate recovery on disposable infrastructure. **Confirm:** Owner funds/accepts service; Dev Lead/Operations validates.
 
 ## D12 — Hosting, backup, RPO/RTO and operations
+
+**Owner status:** Proposed; explicitly not approved on 2026-11-05.
 
 **Question:** What production operating model, recovery objectives and accountable humans are acceptable?
 **Related OQ:** OQ-031, OQ-036, OQ-019 and NFR-AVL-001 `[A]`.
@@ -250,6 +274,8 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 **Reversibility:** Medium before production data, high after provider-specific storage/backups. **Unlocks:** production readiness only after legal/security decisions. **Risk if wrong:** unaffordable design or unrecoverable data. **Early check:** provider-independent tabletop restore using synthetic disposable DB; cost quotations based on measured workload after OQ-031. **Confirm:** Owner, Operations owner, legal/privacy counsel for region/data obligations; Dev Lead for technical feasibility.
 
 ## D13 — Database integration testing in CI
+
+**Owner status:** Approved 2026-11-05 (Owner confirmation in conversation): ephemeral PostgreSQL for Linux CI.
 
 **Question:** How should CI run engine-realistic tests after D1 is approved?
 **Related OQ:** OQ-036/D1, D2, OQ-041/OQ-034 for later isolation tests.
@@ -278,7 +304,7 @@ Use synthetic guest data for demo until privacy/guest decisions are resolved. Th
 
 | Order | Decision | Opens / depends on |
 |---:|---|---|
-| 1 | D9 repository visibility/PDF rights | Owner should verify now; independent of database work. |
+| 1 | D9 repository visibility/PDF rights | Closed as not applicable for the test project; no repository/PDF action. |
 | 2 | D1 database engine | Prerequisite for D2 concrete adapter, schema and D13 engine-specific tests. |
 | 3 | D3 module/framework/toolchain line | Jointly spike with D2; approve exact versions separately from engine. |
 | 4 | D2 ORM/data access | Depends on D1 and D3; opens migration/repository foundation. |

@@ -1,10 +1,10 @@
 # HMS Knowledge Base
 
-This is the entry point for the Homestay Management System (HMS). The repository contains the BA/Knowledge Base and an Owner-authorized Gate A/B application prototype. This bounded implementation does not approve the product architecture or technology stack.
+This is the entry point for the Homestay Management System (HMS). The repository contains the BA/Knowledge Base and an Owner-authorized synthetic test prototype. D1/D2 and the bounded D8 slice have specific approvals recorded in [DECISIONS.md](DECISIONS.md); they do not establish a production baseline.
 
-The Project Owner has confirmed a single-owner model, multiple properties from the first release, and no SaaS for unrelated property owners. The Owner also supplied operational planning ranges of **2–5 properties in the first 12 months** and **6–10 properties in months 12–24**; initial room count remains unknown. These inputs are recorded in [DECISIONS.md](DECISIONS.md). All technology selections—including NestJS/Next.js/PostgreSQL/Redis, packages, versions, ORM and architecture patterns—remain Proposed / Pending Approval. The property ranges are sizing context, not delivery commitments, architecture approval or infrastructure capacity.
+The Project Owner has confirmed a single-owner model, multiple properties from the first release, and no SaaS for unrelated property owners. Planning ranges are recorded in [DECISIONS.md](DECISIONS.md). PostgreSQL and Prisma 7 stable are approved for the synthetic test project; D12 production provider/version/region/backup remains Proposed. ESM is approved only as a measurement spike. The bounded D8 slice uses only synthetic data and does not establish product policy or close business OQs.
 
-The pnpm/NestJS/Next.js choices and package versions used for the bounded prototype are implementation choices authorized for Gate A/B only; product technology and architecture selections, including database, Redis, ORM and architecture patterns, remain Proposed / Pending Approval. The property ranges remain sizing context, not delivery commitments, architecture approval or infrastructure capacity. See [PHASE_0_IMPLEMENTATION_PLAN.md](PHASE_0_IMPLEMENTATION_PLAN.md) for the implementation record.
+Existing pnpm/NestJS/Next.js choices and package versions remain bounded prototype implementation choices. D8 does not authorize authentication/RBAC, real PII, payment/folio/rate engine, Night Audit, CHN/NTF/RPT/AST. See [PHASE_0_IMPLEMENTATION_PLAN.md](PHASE_0_IMPLEMENTATION_PLAN.md) for prior implementation context and [DECISION_PROPOSALS.md](DECISION_PROPOSALS.md) for confirmed decision boundaries.
 
 ## How to use this Knowledge Base
 

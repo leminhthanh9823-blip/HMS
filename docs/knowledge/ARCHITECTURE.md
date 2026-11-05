@@ -2,11 +2,11 @@
 
 Gate C.1 owner-facing decisions D-01–D-08, including database/ORM options and approval dependencies, are assembled in [OWNER_DECISION_PACKAGE.md](OWNER_DECISION_PACKAGE.md). That package is Proposed / Pending Approval and does not change any architecture choice below.
 
-Nothing in this file is an approved architecture decision unless separately recorded in [DECISIONS.md](DECISIONS.md). The BA contains architectural constraints; the three later reports contain recommendations.
+Approved directions and their limits are recorded in [DECISIONS.md](DECISIONS.md). PostgreSQL and Prisma 7 stable are approved for this synthetic test project; D12 production provider/version/region/backup remains Proposed. ESM is a measurement spike only. The BA contains source-marked constraints; proposals remain proposals outside the confirmed boundaries.
 
 ## Bounded Gate A/B implementation record (2026-11-05)
 
-The Owner authorized a prototype repository foundation and empty API/Web/Worker shells. The implementation uses a pnpm workspace, NestJS API, Next.js Web shell and a separate Node.js Worker entry point. This is an implementation record for the authorized task, not approval of the proposed Modular Monolith, product process topology, package versions or full technology stack. Product architecture and technology remain Proposed / Pending Approval. No database, Redis, business module, authentication or production infrastructure was added; OQ-031, OQ-033, OQ-034, OQ-036 and OQ-041 remain open as before.
+The Owner authorized a prototype repository foundation and empty API/Web/Worker shells. The Owner has since approved the D8 synthetic test slice PROP → ROOM → BOOK (hold), and D1 PostgreSQL/D2 Prisma 7 stable foundation. These approvals do not establish a production baseline. D8 excludes authentication/RBAC, real PII, guest, payment/folio/rate engine, Night Audit, CHN/NTF/RPT/AST. OQ-036 is answered only for the engine; OQ-031, OQ-033, OQ-034 and OQ-041 remain open outside the bounded test slice.
 
 ## Owner-provided business direction (2026-11-05)
 
@@ -19,7 +19,14 @@ The project owner confirmed single-owner operation with multiple properties from
 - Do not derive database size, queue capacity, cache topology, service count, autoscaling thresholds or production instance sizes until room count and measured workload are available.
 - The sizing input does not approve an architecture or authorize implementation. Modular Monolith, database, cache/queue and deployment topology remain proposals.
 
-## Proposed system shape (technology approval pending)
+## Approved documentation boundaries and test-slice limits
+
+- D6 documents user × property × role with explicit Owner scope as the default boundary. This does not settle role cardinality, authentication or OQ-041; no authentication/RBAC is implemented in D8.
+- D7 uses no cross-property guest or blacklist sharing as the default boundary. This does not close OQ-034.
+- D8 is a synthetic-data PROP → ROOM → BOOK hold experiment only. Its ASM assumptions are listed in [DECISIONS.md](DECISIONS.md), are configurable when used in code, and are not product baseline decisions.
+- Do not use real personal data or include PII in seed, tests or logs. No payment/folio/rate engine, Night Audit, CHN, NTF, RPT or AST is in this slice.
+
+## Proposed system shape (remaining technology approval pending)
 
 Use a Modular Monolith as the initial application architecture: Next.js staff web application calls a NestJS REST API; PostgreSQL is the primary source of truth; Redis + BullMQ carry asynchronous/retryable jobs. API and worker may run as separate processes while sharing the same backend application modules and database transaction rules. A pnpm TypeScript monorepo and Docker Compose for local development are proposed. Do not start with microservices, Kubernetes or native mobile unless a documented requirement justifies them. These are architecture proposals pending explicit technology approval.
 
@@ -95,9 +102,9 @@ Source labels remain authoritative: `[C]` is the BA's confirmed/baselined classi
 
 | Layer | Proposal | Evidence/status |
 |---|---|---|
-| Database | PostgreSQL with partial unique indexes, CHECK, RLS, JSONB | Proposed / pending approval. OQ-036 remains open; BA NFR-DATA-001 describes constraints but does not select a database (BA Part 1, pp.9, 35). |
+| Database | PostgreSQL with partial unique indexes, CHECK and JSONB | Engine approved for the test project; provider/version/region/backup remain open under D12. RLS is not approved or required by this decision. |
 | Backend | NestJS + TypeScript | Proposed / pending approval; versions, Modular Monolith and Prisma remain proposals. |
-| Cache/queue | Redis + BullMQ | Proposed / pending approval; versions, Redis client and topology remain proposals. |
+| Cache/queue | Redis + BullMQ | Deferred by Owner under D11. |
 | Web | Next.js + React + TypeScript | Proposed / pending approval; versions, App Router, Tailwind, TanStack Query and Zustand remain proposals (technology proposal, p.3; UI proposal, pp.1, 3). |
 | Mobile operations | No native mobile application in the initial implementation unless an approved requirement justifies it | Flutter/React Native are deferred alternatives, not selected; the BA deployment proposal specifies browser access for the initial rollout (technology proposal, p.3; deployment proposal, p.3). |
 | Crypto | Argon2id for password/PIN hashing; AES-256-GCM/KMS for field/object encryption; HMAC-SHA256 blind indexes | proposal; some report passages incorrectly conflate Argon2id with encryption, so crypto design requires review (technology proposal, pp.1, 3) |

@@ -6,9 +6,9 @@ Unresolved entries here are not approved. `ASM-*` values let analysis continue; 
 
 | OQ | Question | Temporary position | Decision owner | Source |
 |---|---|---|---|---|
-| OQ-001 | sale units: room/villa/dorm and parent-child exclusivity | ASM-001 room + whole unit; schema anticipates beds | Owner | BA Part 1, pp.32, 35 |
-| OQ-002 | hourly/monthly stays | ASM-002 nightly stays only in MVP | Owner | BA Part 1, p.32 |
-| OQ-005 | controlled overbooking | ASM-005 disallow by default; Manager may create Conflict | Owner | BA Part 1, p.33 |
+| OQ-001 | sale units: room/villa/dorm and parent-child exclusivity | ASM-001 room + whole unit for D8 test slice only; schema anticipates beds. Test assumption, not baseline; OQ remains open. | Owner | BA Part 1, pp.32, 35 |
+| OQ-002 | hourly/monthly stays | ASM-002 nightly stays for D8 test slice only. Test assumption, not baseline; OQ remains open. | Owner | BA Part 1, p.32 |
+| OQ-005 | controlled overbooking | ASM-005 disallow overbooking for D8 test slice only. Test assumption, not baseline; OQ remains open. | Owner | BA Part 1, p.33 |
 | OQ-008 | cancellation/no-show/early-departure policy | ASM-008 configurable by Rate Plan; first-night no-show | Owner | BA Part 1, p.33 |
 | OQ-014 | tax mode/rates and tax on cancellation fees | support tax-inclusive and exclusive; rate/treatment unconfirmed | Accounting | BA Part 1, p.34 |
 | OQ-015 | e-invoice obligation/provider/timing | risky ASM: internal receipt + export in MVP | Accounting | BA Part 1, p.34 |
@@ -16,7 +16,7 @@ Unresolved entries here are not approved. `ASM-*` values let analysis continue; 
 | OQ-019 | legal basis, retention, deletion and incident handling for personal data | ASM-019 minimize, retain 5 years, anonymize valid requests | Owner + legal counsel | BA Part 1, p.34 |
 | OQ-020 | OTA targets and direct vs Channel Manager | ASM-020 one third-party Channel Manager | Owner | BA Part 1, p.34 |
 | OQ-031 | operational sizing, pilot, budget, deadline, team size and operational ownership | **Partially answered:** 2–5 properties expected in first 12 months; target 6–10 in months 12–24. Initial room count unknown. Pilot property, budget, deadline, staffing and operational ownership remain open. | Owner | BA Part 1, p.34; Project Owner input, 2026-11-05 |
-| OQ-036 | Confirm the primary database technology (PostgreSQL or another option) | PostgreSQL remains proposed; no selection is approved | Owner | technology proposal, pp.1–3; explicit Owner approval not evidenced |
+| OQ-036 | Confirm the primary database technology (PostgreSQL or another option) | **Engine selection answered:** PostgreSQL. Production provider, version, region, backup and operating model remain open under D12. | Owner | Owner confirmation in conversation, 2026-11-05; technology proposal, pp.1–3 |
 | OQ-037 | each property's legal form/revenue and e-invoice obligation | no validated assumption | Owner + Accounting | BA Part 1, p.35 |
 
 ## Other open questions
@@ -24,7 +24,7 @@ Unresolved entries here are not approved. `ASM-*` values let analysis continue; 
 | OQ | Question | Temporary position (not approved) | Source |
 |---|---|---|---|
 | OQ-003 | Group price, master folio, allotment and charge routing? | ASM-003 multi-room + master folio + BR-042 routing | BA Part 1, p.33 |
-| OQ-004 | Hold/deposit deadlines by channel? | ASM-004 deposit 24h after create and ≥24h before arrival; hold = deposit deadline | BA Part 1, p.33 |
+| OQ-004 | Hold/deposit deadlines by channel? | D8 uses a configurable synthetic hold expiry (ASM-004) for testing only; no deposit deadline is implemented or decided. OQ remains open. | BA Part 1, p.33; Owner confirmation in conversation, 2026-11-05 (D8 test boundary) |
 | OQ-006 | Standard check-in/out and early/late tiers? | ASM-006 14:00/12:00; late to 18:00 50%, later one night | BA Part 1, p.33 |
 | OQ-007 | Child/extra-bed/over-standard policy? | ASM-007 under 6 free, 6–11 child supplement | BA Part 1, p.33 |
 | OQ-009 | Reprice date/room changes? | ASM-009 hotel-caused keeps price; guest-caused reprices | BA Part 1, p.33 |
@@ -39,12 +39,12 @@ Unresolved entries here are not approved. `ASM-*` values let analysis continue; 
 | OQ-023 | Ancillary services? | ASM-023 fixed-price service catalog | BA Part 1, p.34 |
 | OQ-030 | KPI target values and baseline owner? | measure two weeks at pilot | BA Part 1, p.34 |
 | OQ-033 | Approve proposed out-of-scope list? | use BA Part 1 §3.2 temporarily | BA Part 1, pp.8, 35 |
-| OQ-034 | Guest/blacklist chain-wide or property; who adds/removes? | ASM-034 chain-wide; Manager with reason | BA Part 1, p.35 |
+| OQ-034 | Guest/blacklist chain-wide or property; who adds/removes? | D7 documentation boundary: no cross-property sharing by default. This does not decide the business policy; OQ remains open. | BA Part 1, p.35; Owner confirmation in conversation, 2026-11-05 |
 | OQ-035 | Must HK work offline? | ASM-035 says no offline in MVP; conflicts with later proposals | BA Part 1, p.35 |
 | OQ-038 | OTA commission and gross/net payout? | ASM-038 store both gross and commission | BA Part 1, p.35 |
 | OQ-039 | Staff/guest-message languages? | ASM-039 Vietnamese UI; VI/EN templates | BA Part 1, p.35 |
 | OQ-040 | Approval with one person on duty? | ASM-040 remote 2FA; Owner self-approval with reason | BA Part 1, p.35 |
-| OQ-041 | Can employee have different roles at multiple properties? | yes; one account with active property selection | BA Part 2, p.41 |
+| OQ-041 | Can employee have different roles at multiple properties? | D6 documentation boundary: user × property × role, with explicit Owner scope. This does not decide membership or role cardinality; OQ remains open. | BA Part 2, p.41; Owner confirmation in conversation, 2026-11-05 |
 | OQ-042 | Approval expiry? | 30 minutes | BA Part 2, p.42 |
 | OQ-043 | TOTP or SMS/Zalo OTP; who pays? | TOTP + recovery codes | BA Part 2, p.42 |
 | OQ-044 | Fixed counter device and personal-phone use? | ≥1 registered counter; six-digit PIN | BA Part 2, p.42 |
@@ -69,7 +69,7 @@ For full wording and current temporary values, use the cited source pages. The o
 | OQ-032 | **Confirmed:** single-owner; no SaaS for independent owners; multi-property operation is required from the first release. | Business-model question answered. This does not settle property-specific business rules or access details: OQ-034 (guest/blacklist sharing), OQ-041 (different roles across properties), OQ-019 (personal data), and the remaining OQ-031 resource/room/pilot questions stay separate. No `tenant_id`, tenant billing or onboarding is implied. | Project Owner direction, conversation 2026-11-05 |
 | OQ-031 | **Confirmed sizing inputs:** 2–5 properties expected in the first 12 months; target 6–10 properties in months 12–24. | OQ remains open. Initial room count is unknown; pilot property, budget, staffing, implementation timeline and operational ownership are not confirmed. The ranges are planning inputs, not delivery commitments or infrastructure sizing approval. | Project Owner input, 2026-11-05 |
 
-OQ-032's business-model question is answered by explicit Owner direction. OQ-031 is partially answered and remains open for the boundaries above. OQ-036 is not resolved: PostgreSQL was discussed and retained as a proposal, but the Owner did not explicitly approve it. Keep the IDs for traceability; do not reuse them. The BA's former `ASM-032`/`ASM-036` values are source history, not approvals for extra details.
+OQ-032's business-model question is answered by explicit Owner direction. OQ-031 is partially answered and remains open for the boundaries above. OQ-036 is answered only for engine selection (PostgreSQL); provider/version/region/backup and operating model remain open. OQ-001/002/004/005 are still open; their cited ASM values are only test assumptions for D8. Keep the IDs for traceability; do not reuse them. The BA's former `ASM-032`/`ASM-036` values are source history, not approvals for extra details.
 
 ## Phase 0 triage
 
