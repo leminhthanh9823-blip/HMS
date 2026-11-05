@@ -48,6 +48,9 @@ test("API serves live and ready health checks over HTTP", async (t) => {
   assert.ok(address && typeof address !== "string");
   const baseUrl = `http://127.0.0.1:${address.port}`;
 
+  const apiResponse = await fetch(`${baseUrl}/health/live`);
+  assert.equal(apiResponse.headers.get("x-powered-by"), null);
+
   for (const [path, status] of [
     ["/health/live", "ok"],
     ["/health/ready", "ready"],
@@ -63,6 +66,11 @@ test("API serves live and ready health checks over HTTP", async (t) => {
     statusCode: 404,
     message: "Cannot GET /missing",
   });
+});
+
+test("API app closes cleanly without opening a listener", async () => {
+  const app = await createApiApp();
+  await app.close();
 });
 
 test("unexpected exceptions return a generic response without internal details", () => {

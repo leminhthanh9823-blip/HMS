@@ -35,6 +35,10 @@ For TypeScript project references, running `tsc -b` from the repository root use
 
 The API test and development runner uses `tsx`/esbuild, which does not emit decorator metadata for Nest constructor injection. Nest dependencies must use explicit `@Inject()` decorators; `apps/api/src/di.test.ts` exercises this behavior.
 
+## Dependency overrides
+
+The root pnpm configuration temporarily pins `multer` to `2.5.0` to address advisories `GHSA-wc9g-mqfw-jrwm`, `GHSA-qfvm-cv95-jqjf`, `GHSA-535w-7cp7-47q4`, `GHSA-q7qp-rjg7-q26m`, `GHSA-3pph-fpjx-jg34` and `GHSA-qvfw-j98x-7q72` reported through `@nestjs/platform-express` (added 2026-11-05). Remove this override when `@nestjs/platform-express` resolves `multer` to `>=2.5.0`, then reinstall and rerun `pnpm audit --prod` before committing the removal.
+
 ## Checks
 
 ```powershell

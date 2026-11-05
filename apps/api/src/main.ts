@@ -65,18 +65,33 @@ export class ApiExceptionFilter implements ExceptionFilter {
 
 export async function createApiApp() {
   const app = await NestFactory.create(AppModule, { logger: ["error"] });
+  app.getHttpAdapter().getInstance().disable("x-powered-by");
   app.enableShutdownHooks();
   app.useGlobalFilters(new ApiExceptionFilter());
   return app;
 }
 
-async function bootstrap(): Promise<void> {
-  const port = Number.parseInt(process.env.API_PORT ?? "3001", 10);
-  const host = process.env.API_HOST ?? "127.0.0.1";
-
-  if (!Number.isInteger(port) || port < 1 || port > 65535) {
-    throw new Error("API_PORT must be an integer between 1 and 65535");
+export function parseApiPort(value: string | undefined): number {
+  const portValue = value ?? "3001";
+  if (!/^\d+$/.test(portValue)) {
+    throw new Error(
+      "API_PORT must contain only digits and be between 1 and 65535",
+    );
   }
+
+  const port = Number(portValue);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error(
+      "API_PORT must contain only digits and be between 1 and 65535",
+    );
+  }
+
+  return port;
+}
+
+async function bootstrap(): Promise<void> {
+  const port = parseApiPort(process.env.API_PORT);
+  const host = process.env.API_HOST ?? "127.0.0.1";
 
   const app = await createApiApp();
 
