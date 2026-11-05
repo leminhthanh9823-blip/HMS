@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { testAssumptions } from "../test-slice/test-assumptions";
+import { isCalendarDate } from "../test-slice/calendar-date";
 
 export const roomTypeCreateSchema = z
   .object({
@@ -19,7 +20,7 @@ export const roomCreateSchema = z
 
 export const roomCapacitySchema = z
   .object({
-    stayDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    stayDate: z.string().refine(isCalendarDate),
     capacity: z.number().int().min(0),
   })
   .strict();

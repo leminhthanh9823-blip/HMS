@@ -21,7 +21,7 @@ docker compose -f infra/docker/compose.dev.yml down
 Reset all local development data:
 
 ```powershell
-docker compose -f infra/docker/compose.dev.yml down -v
+pnpm db:reset:dev
 docker compose -f infra/docker/compose.dev.yml up -d --wait
 ```
 

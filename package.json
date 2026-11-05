@@ -14,6 +14,7 @@
     "build": "pnpm --recursive --if-present build",
     "audit:policy": "node scripts/audit-policy.mjs",
     "test:audit-policy": "node --test scripts/audit-policy.test.mjs",
+    "db:reset:dev": "node scripts/reset-dev-db.mjs",
     "dev": "pnpm --recursive --parallel --if-present dev",
     "format": "prettier --write \"apps/**/*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \"packages/**/*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \"*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \".github/workflows/*.{yaml,yml}\"",
     "format:check": "prettier --check \"apps/**/*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \"packages/**/*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \"*.{js,mjs,cjs,ts,tsx,json,yaml,yml,md}\" \".github/workflows/*.{yaml,yml}\""

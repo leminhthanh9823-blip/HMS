@@ -70,6 +70,7 @@ try {
     env: {
       ...process.env,
       DATABASE_URL: `postgresql://hms_test:hms_test_only@127.0.0.1:${port}/hms_test`,
+      HMS_TEST_HOLD_TTL_SECONDS: process.env.HMS_TEST_HOLD_TTL_SECONDS ?? "2",
     },
   });
 } catch (error) {

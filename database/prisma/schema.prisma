@@ -14,6 +14,17 @@ enum PropertyStatus {
   Closed
 }
 
+enum BookingStatus {
+  Tentative
+  Expired
+  Cancelled
+}
+
+enum RoomNightStatus {
+  Active
+  Released
+}
+
 model Property {
   id           String         @id @db.Uuid
   code         String         @unique @db.VarChar(32)
@@ -25,6 +36,7 @@ model Property {
   updatedAt    DateTime       @default(now()) @map("updated_at") @db.Timestamptz(6)
   roomTypes    RoomType[]
   rooms        Room[]
+  bookings     Booking[]
 
   @@map("properties")
 }
@@ -38,6 +50,7 @@ model RoomType {
   property     Property           @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   rooms        Room[]
   capacities   RoomTypeCapacity[]
+  roomNights   RoomNight[]
 
   @@id([id, propertyId])
   @@unique([propertyId, code])
@@ -45,13 +58,14 @@ model RoomType {
 }
 
 model Room {
-  id         String   @db.Uuid
-  propertyId String   @map("property_id") @db.Uuid
-  roomTypeId String   @map("room_type_id") @db.Uuid
-  code       String   @db.VarChar(32)
-  name       String   @db.VarChar(120)
-  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  roomType   RoomType @relation(fields: [roomTypeId, propertyId], references: [id, propertyId], onDelete: Cascade)
+  id         String      @db.Uuid
+  propertyId String      @map("property_id") @db.Uuid
+  roomTypeId String      @map("room_type_id") @db.Uuid
+  code       String      @db.VarChar(32)
+  name       String      @db.VarChar(120)
+  property   Property    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  roomType   RoomType    @relation(fields: [roomTypeId, propertyId], references: [id, propertyId], onDelete: Cascade)
+  roomNights RoomNight[]
 
   @@id([id, propertyId])
   @@unique([propertyId, code])
@@ -68,4 +82,40 @@ model RoomTypeCapacity {
 
   @@id([roomTypeId, stayDate])
   @@map("room_type_capacities")
+}
+
+model Booking {
+  id             String        @db.Uuid
+  propertyId     String        @map("property_id") @db.Uuid
+  code           String        @db.VarChar(32)
+  idempotencyKey String        @map("idempotency_key") @db.VarChar(128)
+  requestHash    String        @map("request_hash") @db.Char(64)
+  arrival        DateTime      @db.Date
+  departure      DateTime      @db.Date
+  status         BookingStatus @default(Tentative)
+  holdExpiresAt  DateTime      @map("hold_expires_at") @db.Timestamptz(6)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  property       Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  roomNights     RoomNight[]
+
+  @@id([id, propertyId])
+  @@unique([propertyId, code])
+  @@unique([propertyId, idempotencyKey])
+  @@map("bookings")
+}
+
+model RoomNight {
+  id            String          @id @db.Uuid
+  propertyId    String          @map("property_id") @db.Uuid
+  bookingId     String          @map("booking_id") @db.Uuid
+  roomId        String          @map("room_id") @db.Uuid
+  roomTypeId    String          @map("room_type_id") @db.Uuid
+  stayDate      DateTime        @map("stay_date") @db.Date
+  status        RoomNightStatus @default(Active)
+  holdExpiresAt DateTime        @map("hold_expires_at") @db.Timestamptz(6)
+  booking       Booking         @relation(fields: [bookingId, propertyId], references: [id, propertyId], onDelete: Cascade)
+  room          Room            @relation(fields: [roomId, propertyId], references: [id, propertyId], onDelete: Cascade)
+  roomType      RoomType        @relation(fields: [roomTypeId, propertyId], references: [id, propertyId], onDelete: Cascade)
+
+  @@map("room_nights")
 }

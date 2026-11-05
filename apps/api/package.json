@@ -11,7 +11,7 @@
     "typecheck": "pnpm prisma:generate && tsc --noEmit -p tsconfig.json",
     "prisma:generate": "prisma generate --config ../../database/prisma.config.ts",
     "prisma:validate": "prisma validate --config ../../database/prisma.config.ts",
-    "test:db": "pnpm prisma:generate && prisma migrate deploy --config ../../database/prisma.config.ts && tsx --test src/database/database.integration.test.ts",
+    "test:db": "pnpm prisma:generate && prisma migrate deploy --config ../../database/prisma.config.ts && tsx --test src/database/database.integration.test.ts src/bookings/booking.integration.test.ts",
     "test:db:ephemeral": "node ../../scripts/test-db-ephemeral.mjs"
   },
   "dependencies": {
