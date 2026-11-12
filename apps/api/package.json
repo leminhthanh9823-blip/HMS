@@ -15,7 +15,7 @@
     "test:db:ephemeral": "node ../../scripts/test-db-ephemeral.mjs"
   },
   "dependencies": {
-    "@nestjs/common": "11.1.29",
+    "@nestjs/common": "12.4.0",
     "@nestjs/core": "11.1.29",
     "@nestjs/platform-express": "11.1.29",
     "@nestjs/throttler": "6.7.1",
