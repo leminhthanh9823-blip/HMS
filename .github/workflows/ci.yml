@@ -34,7 +34,7 @@ jobs:
       DATABASE_URL: postgresql://hms_test:hms_test_only@127.0.0.1:5432/hms_test
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           version: 10.34.9
       - uses: actions/setup-node@v4
@@ -53,7 +53,7 @@ jobs:
     steps:
       # SHA pinning is deferred until each action commit can be verified from an authoritative source.
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           version: 10.34.9
       - uses: actions/setup-node@v4
